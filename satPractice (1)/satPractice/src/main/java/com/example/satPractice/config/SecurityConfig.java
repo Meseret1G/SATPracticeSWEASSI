@@ -37,14 +37,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/student/register",
-                                "/admin/register",
                                 "/resetPassword",
                                 "/forgotPassword",
                                 "/login",
                                 "/verifyAccountReset",
                                 "/verifyAccount",
                                 "/regenerateOtp").permitAll()
-                        .requestMatchers("/admin/**").authenticated()
+                        
                         .requestMatchers("/student/**").authenticated()
                         .requestMatchers("/logout").permitAll()
 
