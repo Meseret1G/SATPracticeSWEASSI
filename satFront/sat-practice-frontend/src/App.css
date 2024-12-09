@@ -1,0 +1,53 @@
+
+/* App.css */
+
+/* Apply some padding and margin to the body */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Container to hold the entire layout */
+.home-container {
+    display: flex;
+    justify-content: space-between;
+    height: 100vh; /* Full screen height */
+}
+
+/* Logo container - takes up the left half */
+.logo-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0; /* You can adjust this to match your brand */
+}
+
+.logo {
+    width: 80%; /* Adjust based on your logo size */
+    max-width: 300px;
+    height: auto;
+}
+
+/* Login container - takes up the right half */
+.login-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+}
+
+.home-container .login-container form {
+    width: 100%;
+    max-width: 400px; /* Set a max-width for the form */
+    margin-top: 20px; /* Optional: Add margin if needed */
+}
+
+/* Optional: Add some margin around the login form to center it */
+.login-container button {
+    margin-top: 20px;
+}
+
+/* You can adjust the background colors, padding, and other styles as needed */
