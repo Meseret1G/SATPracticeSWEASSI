@@ -3,6 +3,7 @@ package com.example.satPractice.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,4 +22,5 @@ public class StudentInfoDTO {
     @Min(value = 0, message = "Target score must be at least 0") // Ensure targetScore is non-negative
     private Integer targetScore; // Change to Integer to use @NotNull and @Min
 
+   
 }

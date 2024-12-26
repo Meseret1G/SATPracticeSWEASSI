@@ -45,6 +45,8 @@ public class SecurityConfig {
                                 "/verifyAccount",
                                 "/regenerateOtp").permitAll()
                         .requestMatchers("/admin/**").authenticated()
+                        .requestMatchers("/question/**").authenticated()
+                        .requestMatchers("/answer/**").permitAll()
                         .requestMatchers("/student/**").authenticated()
                         .requestMatchers("/logout").permitAll()
 
@@ -74,10 +76,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // Frontend origin
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        configuration.setAllowCredentials(true); // Allow cookies (if needed)
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

@@ -97,7 +97,7 @@ public class StudentController {
         if (updatedUser  != null) {
             return ResponseEntity.ok(updatedUser );
         }
-        return ResponseEntity.notFound().build(); // Return 404 if user not found
+        return ResponseEntity.notFound().build();
     }
 }
 

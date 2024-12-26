@@ -31,7 +31,7 @@ const LoginForm = () => {
 
             console.log("Login response:", response.data);
 
-            const { token, role, targetScore, firstName } = response.data; 
+            const { token, role, isFirstLogin } = response.data; 
 
             if (!token) {
                 throw new Error("No token received.");
@@ -39,9 +39,8 @@ const LoginForm = () => {
 
             sessionStorage.setItem("token", token);
             sessionStorage.setItem("userRole", role);
-
             if (role === "STUDENT") {
-                if (!targetScore && !firstName) {
+                if (isFirstLogin ) { 
                     navigate("/student/student-info"); 
                 } else {
                     navigate("/student/dashboard"); 

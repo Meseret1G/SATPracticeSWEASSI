@@ -8,7 +8,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,8 +20,7 @@ import java.util.*;
 @Service
 public class JwtService {
 
-    @Value("${spring.jwtsecret}")
-    private String secretkey;
+    private String secretkey="W3iOQUiS575K2JPHCCdtalPfvRrcmlcD50KaIWgdJKc=";
 
     @Autowired
     private RoleRepository roleRepository;
@@ -62,7 +60,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000*60*60*60))
                 .signWith(SignatureAlgorithm.HS256, secretkey)
                 .compact();
 

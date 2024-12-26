@@ -102,8 +102,8 @@ public class StudentService {
         return "Congratulations, Have fun!!";
     }
 
-    public StudentInfo getUserByUsername(String email) {
-        Student student = studentRepository.findByUsername(email);
+    public StudentInfo getUserByUsername(String username) {
+        Student student = studentRepository.findByUsername(username);
         if (student != null) {
             return new StudentInfo(student);
         }

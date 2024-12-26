@@ -33,6 +33,7 @@ public abstract class User {
     private String password;
 
     private boolean enabled;
+    private boolean firstLogin=true;
 
     @Column(name = "verification_code")
     private String otp;
@@ -46,8 +47,8 @@ public abstract class User {
     @Column(name = "verification_expiration")
     private LocalDateTime verificationCodeExpiresAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_name")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
     private Role role;
 
     @Column(updatable = false)

@@ -1,11 +1,12 @@
 package com.example.satPractice.controller;
 
 import com.example.satPractice.dto.*;
+import com.example.satPractice.model.User;
+import com.example.satPractice.repository.UserRepository;
 import com.example.satPractice.service.AdminService;
 import com.example.satPractice.service.JwtService;
 import com.example.satPractice.service.UserService;
 import jakarta.mail.MessagingException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,13 +16,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.example.satPractice.service.TokenBlacklistService;
+
+import java.security.Principal;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @Controller
 @RequestMapping("/")
 public class UserController {
+    @Autowired
+    private UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
 @Autowired
 private JwtService jwtService;
@@ -34,7 +40,6 @@ private TokenBlacklistService tokenBlacklistService;
         try {
             Map<String, Object> loginResponse = userService.loginUser(loginDTO);
 
-            // Ensure all values in the response map are strings
             return ResponseEntity.ok(loginResponse);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -94,5 +99,19 @@ private TokenBlacklistService tokenBlacklistService;
         }
         return ResponseEntity.ok("Logout successful. Please delete the token on the client side.");
     }
+    @GetMapping("/user/me")
+    public ResponseEntity<Map<String, Object>> getCurrentUser(Principal principal) {
+        User user = userRepository.findByUsername(principal.getName());
 
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("id", user.getId());
+        userInfo.put("username", user.getUsername());
+        // Add other fields as necessary
+
+        return ResponseEntity.ok(userInfo);
+    }
 }

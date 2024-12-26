@@ -79,13 +79,25 @@ private EmailUtil emailUtil;
             user = studentRepository.findByUsername(loginDTO.getUsername());
         }
 
-        if (user == null || !passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+        if (user == null) {
+            logger.warn("Login attempt with invalid username: {}", loginDTO.getUsername());
             return Map.of("error", "Invalid credentials.");
         }
 
+        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+            logger.warn("Invalid password attempt for user: {}", loginDTO.getUsername());
+            return Map.of("error", "Invalid credentials.");
+        }
         if (!user.isEnabled()) {
             return Map.of("error", "Your account is not verified.");
         }
+        boolean isFirstLogin = user.isFirstLogin();
+        if (isFirstLogin) {
+            user.setFirstLogin(false);
+            userRepository.save(user);
+            logger.info("User {} logged in for the first time.", user.getUsername());
+        }
+
 
         Set<String> roles = new HashSet<>();
         roles.add(user.getRole().getName());
@@ -93,10 +105,10 @@ private EmailUtil emailUtil;
         String jwt = jwtService.generateToken(user.getUsername(), roles);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "Login successful");
+        response.put("message", "Login succeZssful");
         response.put("token", jwt);
-        response.put("role", user.getRole().getName()); // Return the actual role name
-
+        response.put("role", user.getRole().getName());
+        response.put("isFirstLogin", isFirstLogin);
         return response;
     }
 
@@ -150,6 +162,7 @@ private EmailUtil emailUtil;
 
         return "Invalid OTP. Please try again.";
     }
+
     public String verifyAccountReset(VerifyAccountDTO verifyAccountDTO) {
         String email = verifyAccountDTO.getEmail();
         String otp = verifyAccountDTO.getOtp();
@@ -181,7 +194,7 @@ private EmailUtil emailUtil;
         Admin admin = adminRepository.findByEmail(email);
         Student student = null;
         if (admin == null) {
-            student = studentRepository.findByEmail(email);  // Fallback to student if admin is not found
+            student = studentRepository.findByEmail(email);
         }
 
         if (admin == null && student == null) {
@@ -202,7 +215,7 @@ private EmailUtil emailUtil;
         }
 
         user.setPasswordResetToken(otp);
-        user.setResetOtpExpiresAt(LocalDateTime.now().plusMinutes(15)); // Set the expiration time
+        user.setResetOtpExpiresAt(LocalDateTime.now().plusMinutes(15));
         if (admin != null) {
             adminRepository.save(admin);
         } else {
@@ -231,7 +244,7 @@ private EmailUtil emailUtil;
 
         String otp = otpUtil.generateOtp();
         user.setPasswordResetToken(otp);
-        user.setResetOtpExpiresAt(LocalDateTime.now().plusMinutes(15)); // Set expiration
+        user.setResetOtpExpiresAt(LocalDateTime.now().plusMinutes(15));
         if (admin != null) {
             adminRepository.save(admin);
         } else {
