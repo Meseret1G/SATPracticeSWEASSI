@@ -80,17 +80,34 @@ private TokenBlacklistService tokenBlacklistService;
     }
 
     @PostMapping("/forgotPassword")
-    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO) {
+    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
         try {
-            return new ResponseEntity<>(userService.forgotPassword(forgotPasswordDTO.getEmail()), HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            String response = userService.forgotPassword(email);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending OTP email: " + e.getMessage());
         }
     }
 
-
+    @PostMapping("/resetUsername")
+    public ResponseEntity<String> resetUsername(@RequestBody ResetUsernameDTO resetUsernameDTO) {
+        logger.info("Reset username request received for OTP: {}", resetUsernameDTO.getOtp());
+        try {
+            return new ResponseEntity<>(userService.resetUsername(resetUsernameDTO), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            logger.error("Error during username reset: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @PostMapping("/forgotUsername")
+    public ResponseEntity<String> forgotUsername(@RequestParam String email) {
+        try {
+            String response = userService.forgotUsername(email);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (MessagingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending OTP email: " + e.getMessage());
+        }
+    }
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String authorizationHeader){
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {

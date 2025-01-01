@@ -13,11 +13,9 @@ import {
   ListItem,
   ListItemText,
   ListItemButton,
-  Snackbar,
   Toolbar,
   Typography,
   Collapse,
-  TextField,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -36,16 +34,11 @@ const AdminDashboard = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [openPractice, setOpenPractice] = useState(false);
-  const [user, setUser] = useState(null);
-  const [adminEmail, setAdminEmail] = useState('');
-  const [adminUsername, setAdminUsername] = useState('');
-  const [adminPassword, setAdminPassword] = useState('');
-  const [otp, setOtp] = useState('');
-  const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [messageType, setMessageType] = useState('');
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [isVerifying, setIsVerifying] = useState(false);
+  const [user, setUser ] = useState(null); // Correctly define user state
+  const [message, setMessage] = useState(''); // Correctly define message state
+  const [loading, setLoading] = useState(true); // Correctly define loading state
+  const [messageType, setMessageType] = useState(''); // Correctly define messageType state
+  const [snackbarOpen, setSnackbarOpen] = useState(false); 
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [openMath, setOpenMath] = useState(false);
@@ -83,10 +76,18 @@ const AdminDashboard = () => {
           },
         });
         setUser(response.data);
-      } catch (error) {
-        setMessage(error.response ? error.response.data : "An error occurred. Please try again.");
+      } catch (err) {
+        if (err.response && err.response.status === 401) {
+          alert('Session expired. Please log in again.');
+          setTimeout(() => {
+  navigate('/login'); 
+}, 3000);
+        } else {
+          setMessage(err.response ? err.response.data : "An error occurred. Please try again.");
         setMessageType('error');
         setSnackbarOpen(true);
+        }
+        
       } finally {
         setLoading(false);
       }
@@ -113,65 +114,81 @@ const AdminDashboard = () => {
 
       sessionStorage.removeItem('token');
       navigate('/login');
-    } catch (error) {
-      alert("Logout failed. Please try again.");
+    } catch (err) {
+      if (err.response && err.response.status === 401) {
+        alert('Session expired. Please log in again.');
+        setTimeout(() => {
+        navigate('/login'); 
+        }, 3000);
+      } else {
+        alert("Logout failed. Please try again.");
+      }
+     
     }
   };
 
-  const handleAddAdmin = async () => {
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-      alert("No token found. You are not logged in.");
-      return;
-    }
+  // const handleAddAdmin = async () => {
+  //   const token = sessionStorage.getItem('token');
+  //   if (!token) {
+  //     alert("No token found. You are not logged in.");
+  //     return;
+  //   }
 
-    try {
-      const response = await axios.post('http://localhost:8080/admin/register', {
-        username: adminUsername,
-        email: adminEmail,
-        password: adminPassword
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setMessage(response.data);
-      setMessageType('success');
-      setSnackbarOpen(true);
-      setIsVerifying(true);
-      setAdminUsername('');
-      setAdminPassword('');
-      setOtp('');
-    } catch (error) {
-      setMessage(error.response ? error.response.data : "Failed to add admin. Please try again.");
-      setMessageType('error');
-      setSnackbarOpen(true);
-    }
-  };
+  //   try {
+  //     const response = await axios.post('http://localhost:8080/admin/register', {
+  //       username: adminUsername,
+  //       email: adminEmail,
+  //       password: adminPassword
+  //     }, {
+  //       headers: { Authorization: `Bearer ${token}` }
+  //     });
+  //     setMessage(response.data);
+  //     setMessageType('success');
+  //     setSnackbarOpen(true);
+  //     setIsVerifying(true);
+  //     setAdminUsername('');
+  //     setAdminPassword('');
+  //     setOtp('');
+  //   } catch (error) {
+  //     if (error.response && error.response.status === 401) {
+  //       alert('Session expired. Please log in again.');
+  //       setTimeout(() => {
+  //       navigate('/login'); 
+  //       }, 3000);
+  //     } else {
+  //       setMessage(error.response ? error.response.data : "Failed to add admin. Please try again.");
+  //     setMessageType('error');
+  //     setSnackbarOpen(true);
+  //     }
+      
+  //   }
+  // };
 
-  const handleVerifyAccount = async () => {
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-      alert("No token found. You are not logged in.");
-      return;
-    }
+  // const handleVerifyAccount = async () => {
+  //   const token = sessionStorage.getItem('token');
+  //   if (!token) {
+  //     alert("No token found. You are not logged in.");
+  //     return;
+  //   }
 
-    try {
-      const response = await axios.post('http://localhost:8080/verifyAccount', {
-        email: adminEmail,
-        otp: otp
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setMessage(response.data);
-      setMessageType('success');
-      setSnackbarOpen(true);
-      setIsVerifying(false);
-      setOtp('');
-    } catch (error) {
-      setMessage(error.response ? error.response.data : "Failed to verify account. Please try again.");
-      setMessageType('error');
-      setSnackbarOpen(true);
-    }
-  };
+  //   try {
+  //     const response = await axios.post('http://localhost:8080/verifyAccount', {
+  //       email: adminEmail,
+  //       otp: otp
+  //     }, {
+  //       headers: { Authorization: `Bearer ${token}` }
+  //     });
+  //     setMessage(response.data);
+  //     setMessageType('success');
+  //     setSnackbarOpen(true);
+  //     setIsVerifying(false);
+  //     setOtp('');
+  //   } catch (error) {
+  //     setMessage(error.response ? error.response.data : "Failed to verify account. Please try again.");
+  //     setMessageType('error');
+  //     setSnackbarOpen(true);
+  //   }
+  // };
 
   const handleAddPracticeQuestions = () => {
     setOpen(!open);

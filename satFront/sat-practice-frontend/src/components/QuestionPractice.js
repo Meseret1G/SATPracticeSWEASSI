@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
   Container,
@@ -28,6 +29,8 @@ const QuestionAnswering = () => {
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [missedAnswersCount, setMissedAnswersCount] = useState(0); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -43,9 +46,17 @@ const QuestionAnswering = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setStudentId(userResponse.data.id);
-      } catch (err) {
-        setError('Error fetching user ID. Please log in again.');
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          alert('Session expired. Please log in again.');
+          setTimeout(() => {
+          navigate('/login'); 
+          }, 3000);
+        } else {
+          setError('Error fetching user ID. Please log in again.');
         setSnackbarOpen(true);
+      }
+        
       }
     };
 
@@ -61,9 +72,17 @@ const QuestionAnswering = () => {
         } else {
           setQuestions({ englishQuestions: [], mathQuestion: [] });
         }
-      } catch (err) {
-        setError('Error fetching questions. Please try again later.');
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          alert('Session expired. Please log in again.');
+          setTimeout(() => {
+          navigate('/login'); 
+          }, 3000);
+        } else {
+          setError('Error fetching questions. Please try again later.');
         setSnackbarOpen(true);
+      }
+        
       }
     };
 
@@ -77,20 +96,20 @@ const QuestionAnswering = () => {
 
   const handleSubmit = async (e, isQuizCompleted = false) => {
     if (e) e.preventDefault(); 
-
+  
     setError('');
     setShowExplanation(false);
-
+  
     try {
       const token = sessionStorage.getItem('token');
       if (!token) {
-        setError('User is not authenticated. Please log in.');
+        setError('User  is not authenticated. Please log in.');
         setSnackbarOpen(true);
         return;
       }
-
+  
       const currentQuestion = [...questions.mathQuestion, ...questions.englishQuestions][currentQuestionIndex];
-
+  
       const requestBody = {
         studentId,
         questionId: currentQuestion.id,
@@ -98,28 +117,45 @@ const QuestionAnswering = () => {
         selectedAnswer,
         isQuizCompleted,
       };
-
+  
       const result = await axios.post('http://localhost:8080/question/answer', requestBody, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
-
-      setResponses((prev) => [...prev, { isCorrect: result.data.correct, explanation: result.data.explanation }]);
-
-      if (result.data.correct) {
+  
+      const isCorrect = result.data.correct; 
+      setResponses((prev) => [...prev, { isCorrect, explanation: result.data.explanation }]);
+  
+      // Update score and missed questions
+      if (isCorrect) {
         setScore((prevScore) => prevScore + 1);
+      } else {
+        // Check if the question is already missed
+        const alreadyMissed = responses.some(response => response.isCorrect === false && response.explanation === result.data.explanation);
+        if (!alreadyMissed) {
+          // Increment missed answers count
+          // Assuming you have a state to track missed answers
+          setMissedAnswersCount((prevCount) => prevCount + 1);
+        }
       }
-
+  
       setShowExplanation(true);
-
+  
       if (isQuizCompleted) {
         setQuizCompleted(true);  
       }
     } catch (err) {
-      setError('Error submitting answers. Please try again.');
-      setSnackbarOpen(true);
+      if (err.response && err.response.status === 401) {
+        alert('Session expired. Please log in again.');
+        setTimeout(() => {
+          navigate('/login'); 
+        }, 3000);
+      } else {
+        setError('Error submitting answers. Please try again.');
+        setSnackbarOpen(true);
+      }
     }
   };
 
@@ -175,9 +211,24 @@ const QuestionAnswering = () => {
         setError('Question set not found.');
         setSnackbarOpen(true);
       }
-    } catch (err) {
-      setError('Error marking the question set as completed. Please try again.');
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        alert('Session expired. Please log in again.');
+        setTimeout(() => {
+        navigate('/login'); 
+        }, 3000);
+      } else {
+        setError('Error marking the question set as completed. Please try again.');
       setSnackbarOpen(true);
+    }
+      
+    }
+  };
+  const handlePracticeClick = (subject) => {
+    if (subject === 'English') {
+      navigate('/english-question-set');
+    } else if (subject === 'Math') {
+      navigate('/math-question-set');
     }
   };
 
@@ -210,15 +261,25 @@ const QuestionAnswering = () => {
         boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
       }}
     >
+      
       <Typography variant="h4" gutterBottom style={{ color: '#4caf50' }}>
         Practice Questions for "{title}"
       </Typography>
       {quizCompleted ? (
         <Box>
+          
           <Typography variant="h5" color="primary">
             🎉 Quiz Completed!
           </Typography>
           <Typography variant="h6">Your score: {score} out of {totalQuestions}</Typography>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => handlePracticeClick(title.includes('English') ? 'English' : 'Math')}
+            style={{ marginTop: '20px' }}
+          >
+            Back
+          </Button>
         </Box>
       ) : currentQuestion ? (
         <form onSubmit={handleSubmit}>
@@ -274,7 +335,7 @@ const QuestionAnswering = () => {
         message={error}
       />
     </Container>
-  );
+);
 };
 
 export default QuestionAnswering;

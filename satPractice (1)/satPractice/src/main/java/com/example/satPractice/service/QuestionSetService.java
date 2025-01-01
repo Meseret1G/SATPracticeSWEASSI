@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class QuestionSetService {
@@ -27,22 +28,34 @@ public class QuestionSetService {
 
     public QuestionSet addQuestionSet(QuestionSet questionSet, String questionType) {
         if (questionType.equals("MATH") && questionSet.getMathQuestion().size() == 5) {
-            questionSet.setTitle(generateSetTitle("Math"));
+
             for (MathQuestion mathQuestion : questionSet.getMathQuestion()) {
+                if (mathQuestionExists(mathQuestion)){
+                    throw new IllegalArgumentException("The question '"+ mathQuestion.getText()+" 'already exists.");
+                }
                 mathQuestion.setQuestionSet(questionSet);
             }
+            questionSet.setTitle(generateSetTitle("Math"));
             return questionSetRepository.save(questionSet);
         } else if (questionType.equals("ENGLISH") && questionSet.getEnglishQuestions().size() == 5) {
-            questionSet.setTitle(generateSetTitle("English"));
             for (EnglishQuestion englishQuestion : questionSet.getEnglishQuestions()) {
+                if (englishQuestionExists(englishQuestion)) {
+                    throw new IllegalArgumentException("The question '" + englishQuestion.getText() + "' already exists.");
+                }
                 englishQuestion.setQuestionSet(questionSet);
             }
+            questionSet.setTitle(generateSetTitle("English"));
             return questionSetRepository.save(questionSet);
         } else {
             throw new IllegalArgumentException("You must add exactly 5 questions of the selected type.");
         }
     }
-
+    private boolean mathQuestionExists(MathQuestion mathQuestion) {
+        return mathQuestionRepository.existsByText(mathQuestion.getText());
+    }
+    private boolean englishQuestionExists(EnglishQuestion englishQuestion) {
+        return englishQuestionRepository.existsByText(englishQuestion.getText());
+    }
     private String generateSetTitle(String type) {
         long count = questionSetRepository.countByTitleStartingWith(type);
         return type + " Set " + (count + 1);
@@ -78,6 +91,26 @@ public class QuestionSetService {
         studentRepository.save(student);
 
         return questionSet;
+    }
+
+    public List<MissedQuestion> getMissedQuestions(Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+
+        return student.getMissedQuestions();
+    }
+    public long countMissedQuestions(Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+
+        return student.getMissedQuestions().size();
+    }
+    public Optional<MathQuestion> findMathQuestionByTitleAndId(String title, Long id) {
+        return mathQuestionRepository.findByQuestionSetTitleAndId(title, id);
+    }
+
+    public Optional<EnglishQuestion> findEnglishQuestionByTitleAndId(String title, Long id) {
+        return englishQuestionRepository.findByQuestionSetTitleAndId(title, id);
     }
     public List<QuestionSet> findByTitle(String title) {
         return questionSetRepository.findByTitle(title);

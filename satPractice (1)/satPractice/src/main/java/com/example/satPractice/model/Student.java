@@ -35,13 +35,6 @@ public class Student extends User {
     )
     private List<QuestionSet> completedQuestionSets = new ArrayList<>();
 
-    // for future
-    public void calculatePercentScore() {
-        if (quizzesAttempted > 0) {
-            this.percentScore = (float) answeredQuestions / (answeredQuestions + missedAnswers) * 100;
-        }
-    }
-
     public void markQuestionSetCompleted(QuestionSet questionSet) {
         if (!completedQuestionSets.contains(questionSet)) {
             completedQuestionSets.add(questionSet);

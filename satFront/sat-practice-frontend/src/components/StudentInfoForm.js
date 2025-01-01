@@ -12,25 +12,46 @@ const StudentInfoForm = () => {
     const [isError, setIsError] = useState(false);
     const navigate = useNavigate();
 
+    const validateInputs = () => {
+        const nameRegex = /^[A-Za-z]+$/;
+        if (!firstName || !nameRegex.test(firstName)) {
+            setDialogMessage('First name must only contain alphabets.');
+            setIsError(true);
+            setDialogOpen(true);
+            return false;
+        }
+
+        if (!lastName || !nameRegex.test(lastName)) {
+            setDialogMessage('Last name must only contain alphabets.');
+            setIsError(true);
+            setDialogOpen(true);
+            return false;
+        }
+
+        // Ensure target score is a number between 0 and 1600
+        const score = parseInt(targetScore, 10);
+        if (isNaN(score) || score < 0 || score > 1600) {
+            setDialogMessage("Target score must be a number between 0 and 1600.");
+            setIsError(true);
+            setDialogOpen(true);
+            return false;
+        }
+
+        return true;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        const score = parseInt(targetScore, 10);
-        if (score > 1600) {
-            setDialogMessage("The target score can't be greater than 1600.");
-            setIsError(true);
-            setDialogOpen(true);
-            return;
-        }
+        if (!validateInputs()) return; // Validate before proceeding
 
         const studentInfoDTO = {
             firstName,
             lastName,
-            targetScore: score,
+            targetScore: parseInt(targetScore, 10),
         };
 
         try {
-            
             const token = sessionStorage.getItem('token');  
 
             const response = await axios.post('http://localhost:8080/student/studentInfo', studentInfoDTO, {
@@ -42,10 +63,18 @@ const StudentInfoForm = () => {
             setDialogMessage(response.data.message || 'Success');
             setIsError(false);
             setDialogOpen(true); 
-        } catch (err) {
-            setDialogMessage(err.response?.data || 'An error occurred.');
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                alert('Session expired. Please log in again.');
+                setTimeout(() => {
+                navigate('/login'); 
+                }, 3000);
+              } else {
+                setDialogMessage(error.response?.data || 'An error occurred.');
             setIsError(true);
             setDialogOpen(true); 
+            }
+            
         }
     };
 
@@ -70,6 +99,7 @@ const StudentInfoForm = () => {
                     onChange={(e) => setFirstName(e.target.value)}
                     required
                     margin="normal"
+                    inputProps={{ maxLength: 50 }}
                 />
                 <TextField
                     label="Last Name"
@@ -79,6 +109,7 @@ const StudentInfoForm = () => {
                     onChange={(e) => setLastName(e.target.value)}
                     required
                     margin="normal"
+                    inputProps={{ maxLength: 50 }}
                 />
                 <TextField
                     label="Target Score"
@@ -89,6 +120,7 @@ const StudentInfoForm = () => {
                     onChange={(e) => setTargetScore(e.target.value)}
                     required
                     margin="normal"
+                    inputProps={{ min: 0, max: 1600 }}
                 />
                 <Button
                     type="submit"

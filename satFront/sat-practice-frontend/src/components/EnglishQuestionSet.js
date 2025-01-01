@@ -4,6 +4,7 @@ import { Container, Typography, List, ListItem, Snackbar, Button, Card, CardCont
 import CheckIcon from '@mui/icons-material/Check';
 import HomeIcon from '@mui/icons-material/Home';
 import axios from 'axios'; 
+
 const EnglishQuestionSet = () => {
   const [questionSets, setQuestionSets] = useState([]);
   const [completedSets, setCompletedSets] = useState(new Set());
@@ -27,10 +28,22 @@ const EnglishQuestionSet = () => {
         const studentId = response.data.id;
         setStudentId(studentId);
       })
-      .catch((err) => {
-        setError('Failed to fetch user data.');
-        setSnackbarOpen(true);
-        console.error(err);
+      .catch((error) => {
+        console.error('Request failed:', error);
+        if (error.response) {
+          console.error('Error response:', error.response);
+          if (error.response.status === 403) {
+            alert('Access denied. You do not have permission to access this resource.');
+          } else if (error.response.status === 401) {
+            alert('Session expired. Please log in again.');
+            setTimeout(() => navigate('/login'), 3000);
+          } else {
+            setError('Failed to fetch data.');
+            setSnackbarOpen(true);
+          }
+        } else {
+          console.error('Request failed:', error.message);
+        }
       });
 
     axios.get('http://localhost:8080/question/byType?type=English', {
@@ -42,14 +55,30 @@ const EnglishQuestionSet = () => {
       .then((response) => {
         setQuestionSets(response.data);
       })
-      .catch((err) => {
-        setError('Failed to fetch question sets.');
+      .catch((error) => {
+        console.error('Error response:', error.response);
+
+        if (error.response && error.response.status === 401) {
+          alert('Session expired. Please log in again.');
+          setTimeout(() => {
+          navigate('/login'); 
+          }, 3000);
+        } else {
+          setError('Failed to fetch question sets.');
         setSnackbarOpen(true);
-        console.error(err);
+        console.error(error);
+      }
+        
       });
   }, []);
 
   useEffect(() => {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      setError('User is not authenticated. Please log in.');
+      setSnackbarOpen(true);
+      return;
+    }
     if (studentId) {
       axios.get(`http://localhost:8080/question/${studentId}/completed-question-sets`, {
         headers: {
@@ -61,10 +90,20 @@ const EnglishQuestionSet = () => {
           const completedTitles = new Set(response.data.map((set) => set.title));
           setCompletedSets(completedTitles);
         })
-        .catch((err) => {
-          setError('Failed to fetch completed question sets.');
+        .catch((error) => {
+          console.error('Error response:', error.response);
+
+          if (error.response && error.response.status === 401) {
+            alert('Session expired. Please log in again.');
+            setTimeout(() => {
+            navigate('/login'); 
+            }, 3000);
+          } else {
+            setError('Failed to fetch completed question sets.');
           setSnackbarOpen(true);
-          console.error(err);
+          console.error(error)
+        }
+          ;
         });
     }
   }, [studentId]);

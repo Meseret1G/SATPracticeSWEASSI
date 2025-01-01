@@ -29,4 +29,5 @@ public class EnglishQuestionController {
         EnglishQuestion editedQuestion = englishQuestionService.editEnglishQuestion(id, updatedQuestion);
         return ResponseEntity.ok(editedQuestion);
     }
+
 }

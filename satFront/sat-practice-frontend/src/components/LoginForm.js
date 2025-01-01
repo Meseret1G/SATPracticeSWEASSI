@@ -40,7 +40,7 @@ const LoginForm = () => {
             sessionStorage.setItem("token", token);
             sessionStorage.setItem("userRole", role);
             if (role === "STUDENT") {
-                if (isFirstLogin ) { 
+                if (isFirstLogin) { 
                     navigate("/student/student-info"); 
                 } else {
                     navigate("/student/dashboard"); 
@@ -50,19 +50,14 @@ const LoginForm = () => {
             }
 
         } catch (error) {
-            let errorMessage = "An unexpected error occurred.";
+            // Directly set the message based on the error response
             if (error.response) {
-                if (error.response.status === 401) {
-                    errorMessage = "Invalid username or password.";
-                } else if (error.response.status === 403) {
-                    errorMessage = "Access denied.";
-                } else {
-                    errorMessage = error.response.data?.error || errorMessage;
-                }
+                
+                setMessage(error.response.data?.error || "An unexpected error occurred.");
             }
-
-            console.error("Login error:", error);
-            setMessage(errorMessage);
+            else {
+                setMessage("An unexpected error occurred."); // Fallback for network errors
+            }
         } finally {
             setIsLoading(false);
         }
@@ -74,6 +69,10 @@ const LoginForm = () => {
 
     const handleForgotPassword = () => {
         navigate("/forgot-password");
+    };
+
+    const handleForgotUsername = () => {
+        navigate("/forgot-username");
     };
 
     return (
@@ -122,6 +121,9 @@ const LoginForm = () => {
                         Forgot Password?
                     </Button>
                 </Box>
+                <Button onClick={handleForgotUsername} color="secondary">
+                    Forgot Username?
+                </Button>
             </Box>
         </Container>
     );

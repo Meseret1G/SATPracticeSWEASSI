@@ -3,26 +3,26 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Container, Typography, Button, TextField, Box, Alert, CircularProgress } from "@mui/material";
 
-const ForgotPassword = () => {
+const ForgotUsername = () => {
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleForgotPassword = async (e) => {
+    const handleForgotUsername= async (e) => {
         e.preventDefault();
         setMessage("");
         setIsLoading(true); 
 
         try {
-            const response = await axios.post(`http://localhost:8080/forgotPassword?email=${encodeURIComponent(email)}`);
+            const response = await axios.post(`http://localhost:8080/forgotUsername?email=${encodeURIComponent(email)}`);
             console.log("Response from server:", response.data);
             setMessage(response.data);
 
             if (response.data === "OTP sent to your email."||response.data ==="A valid OTP already exists. Please use the existing OTP.") {
                 sessionStorage.setItem("userEmail", email);
                 setTimeout(() => {
-                    navigate("/verify-account-reset");
+                    navigate("/verify-account-username");
                 }, 1000); 
             }
         } catch (error) {
@@ -36,9 +36,9 @@ const ForgotPassword = () => {
         <Container maxWidth="sm" sx={{ marginTop: 4 }}>
             <Box sx={{ padding: 4, borderRadius: 2, boxShadow: 3, backgroundColor: '#e3f2fd' }}>
                 <Typography variant="h4" align="center" gutterBottom>
-                    Forgot Password
+                    Forgot Username
                 </Typography>
-                <form onSubmit={handleForgotPassword}>
+                <form onSubmit={handleForgotUsername}>
                     <TextField
                         label="Email"
                         type="email"
@@ -71,4 +71,4 @@ const ForgotPassword = () => {
     );
 };
 
-export default ForgotPassword;
+export default ForgotUsername;

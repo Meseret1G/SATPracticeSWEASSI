@@ -37,16 +37,19 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/student/register",
-                                "/admin/register",
                                 "/resetPassword",
+                                "/resetUsername",
                                 "/forgotPassword",
+                                "/forgotUsername",
                                 "/login",
+                                "/admin/register",
                                 "/verifyAccountReset",
                                 "/verifyAccount",
                                 "/regenerateOtp").permitAll()
                         .requestMatchers("/admin/**").authenticated()
                         .requestMatchers("/question/**").authenticated()
                         .requestMatchers("/answer/**").permitAll()
+
                         .requestMatchers("/student/**").authenticated()
                         .requestMatchers("/logout").permitAll()
 

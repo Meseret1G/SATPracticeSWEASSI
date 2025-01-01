@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import MenuItem from '@mui/material/MenuItem';
+import { useNavigate } from 'react-router-dom';
 
 const Alert = React.forwardRef((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -34,6 +35,7 @@ const DisplayMathQuestions = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -43,8 +45,15 @@ const DisplayMathQuestions = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setMathQuestions(response.data);
-      } catch (err) {
-        setError(err.message);
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          alert('Session expired. Please log in again.');
+          setTimeout(() => {
+            navigate('/login'); 
+          }, 3000);
+        } else {
+          setError(error.message);
+        }
       } finally {
         setLoading(false);
       }
@@ -76,17 +85,26 @@ const DisplayMathQuestions = () => {
       setEditingQuestion(null);
       setOpenDialog(false);
       showSnackbar("Question updated successfully!");
-    } catch (err) {
-      setError('Failed to replace the question');
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        alert('Session expired. Please log in again.');
+        setTimeout(() => {
+          navigate('/login'); 
+        }, 3000);
+      } else {
+        setError('Failed to replace the question');
+      }
     }
   };
-  const handleQuestionChange = (index, event) => {
+
+  const handleQuestionChange = (event) => {
     const { name, value } = event.target;
     setEditingQuestion((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
+
   const showSnackbar = (message) => {
     setSnackbarMessage(message);
     setOpenSnackbar(true);
@@ -104,12 +122,33 @@ const DisplayMathQuestions = () => {
     (question.text && question.text.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
+  const isEditingQuestionValid = () => {
+    return (
+      editingQuestion &&
+      editingQuestion.text &&
+      editingQuestion.optionA &&
+      editingQuestion.optionB &&
+      editingQuestion.optionC &&
+      editingQuestion.optionD &&
+      editingQuestion.correctAnswer &&
+      editingQuestion.difficulty
+    );
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!topic) return <div>No topic provided.</div>;
 
   return (
     <Paper elevation={3} style={{ padding: '20px', maxWidth: '800px', margin: '20px auto', borderRadius: '10px', backgroundColor: '#f9f9f9' }}>
+      <Button
+              variant="contained"
+              color="primary"
+              onClick={() => navigate('/admin/dashboard')}
+              sx={{ marginBottom: 2 }}
+            >
+              Back
+            </Button>
       <Typography variant="h4" gutterBottom align="center" style={{ color: '#333' }}>
         Math Questions for Topic: {topic}
       </Typography>
@@ -127,7 +166,7 @@ const DisplayMathQuestions = () => {
       <Grid container spacing={3}>
         {filteredQuestions.map((question) => (
           <Grid item xs={12} sm={6} key={question.id}>
-            <Card variant="outlined" style={{ transition: '0.3s', cursor: 'pointer',backgroundColor: '#e3f2fd', borderRadius: '10px' }} 
+            <Card variant="outlined" style={{ transition: '0.3s', cursor: 'pointer', backgroundColor: '#e3f2fd', borderRadius: '10px' }} 
                   onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.2)'} 
                   onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}>
               <CardContent onClick={() => toggleDetails(question.id)}>
@@ -159,77 +198,94 @@ const DisplayMathQuestions = () => {
         ))}
       </Grid>
 
-      <Dialog  open={openDialog} onClose={() => setOpenDialog(false)}>
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Edit Question</DialogTitle>
-        <DialogContent >
+        <DialogContent>
           <TextField
             fullWidth
             label="Text"
+            name="text"
             value={editingQuestion ? editingQuestion.text : ''}
-            onChange={(e) => setEditingQuestion({ ...editingQuestion, text: e.target.value })}
+            onChange={handleQuestionChange}
             style={{ marginBottom: '10px' }}
+            multiline
+            rows={4}
           />
           <TextField
             fullWidth
             label="Option A"
+            name="optionA"
             value={editingQuestion ? editingQuestion.optionA : ''}
-            onChange={(e) => setEditingQuestion({ ...editingQuestion, optionA: e.target.value })}
+            onChange={handleQuestionChange}
             style={{ marginBottom: '10px' }}
+            multiline
+            rows={2}
           />
           <TextField
             fullWidth
             label="Option B"
+            name="optionB"
             value={editingQuestion ? editingQuestion.optionB : ''}
-            onChange={(e) => setEditingQuestion({ ...editingQuestion, optionB: e.target.value })}
+            onChange={handleQuestionChange}
             style={{ marginBottom: '10px' }}
+            multiline
+            rows={2}
           />
           <TextField
             fullWidth
             label="Option C"
+            name="optionC"
             value={editingQuestion ? editingQuestion.optionC : ''}
-            onChange={(e) => setEditingQuestion({ ...editingQuestion, optionC: e.target.value })}
+            onChange={handleQuestionChange}
             style={{ marginBottom: '10px' }}
+            multiline
+            rows={2}
           />
           <TextField
             fullWidth
             label="Option D"
+            name="optionD"
             value={editingQuestion ? editingQuestion.optionD : ''}
-            onChange={(e) => setEditingQuestion({ ...editingQuestion, optionD: e.target.value })}
+            onChange={handleQuestionChange}
             style={{ marginBottom: '10px' }}
+            multiline
+            rows={2}
           />
           <TextField
             fullWidth
+            select
             label="Correct Answer"
+            name="correctAnswer"
             value={editingQuestion ? editingQuestion.correctAnswer : ''}
-            onChange={(e) => setEditingQuestion({ ...editingQuestion, correctAnswer: e.target.value })}
+            onChange={handleQuestionChange}
+            required
             style={{ marginBottom: '10px' }}
-          />
+          >
+            <MenuItem value="">Select Answer</MenuItem>
+            <MenuItem value={editingQuestion?.optionA}>{editingQuestion?.optionA}</MenuItem>
+            <MenuItem value={editingQuestion?.optionB}>{editingQuestion?.optionB}</MenuItem>
+            <MenuItem value={editingQuestion?.optionC}>{editingQuestion?.optionC}</MenuItem>
+            <MenuItem value={editingQuestion?.optionD}>{editingQuestion?.optionD}</MenuItem>
+          </TextField>
           <TextField
             fullWidth
-            label="Explanation"
-            value={editingQuestion ? editingQuestion.explanation : ''}
-            onChange={(e) => setEditingQuestion({ ...editingQuestion, explanation: e.target.value })}
+            select
+            label="Difficulty"
+            name="difficulty"
+            value={editingQuestion ? editingQuestion.difficulty : ''}
+            onChange={handleQuestionChange}
+            required
             style={{ marginBottom: '10px' }}
-          />
-         <TextField
-              fullWidth
-              select
-              label="Difficulty"
-              name="difficulty"
-              value={editingQuestion ? editingQuestion.difficulty : ''}
-              onChange={(e) => handleQuestionChange(null, e)}
-              required
-              style={{ marginBottom: '10px' }}
-            >
-              <MenuItem value="">Select Difficulty</MenuItem>
-              <MenuItem value="Easy">Easy</MenuItem>
-              <MenuItem value="Medium">Medium</MenuItem>
-              <MenuItem value="Hard">Hard</MenuItem>
-            </TextField>
+          >
+            <MenuItem value="">Select Difficulty</MenuItem>
+            <MenuItem value="Easy">Easy</MenuItem>
+            <MenuItem value="Medium">Medium</MenuItem>
+            <MenuItem value="Hard">Hard</MenuItem>
+          </TextField>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenDialog(false)} color="secondary">Cancel</Button>
-          <Button onClick={handleReplace} color="primary">Save Changes</Button>
+          <Button onClick={handleReplace} color="primary" disabled={!isEditingQuestionValid()}>Save Changes</Button>
         </DialogActions>
       </Dialog>
 

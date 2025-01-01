@@ -1,6 +1,7 @@
 package com.example.satPractice.service;
 
 import com.example.satPractice.dto.ResetPasswordDTO;
+import com.example.satPractice.dto.ResetUsernameDTO;
 import com.example.satPractice.dto.VerifyAccountDTO;
 import com.example.satPractice.model.Admin;
 import com.example.satPractice.model.Student;
@@ -17,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +26,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDateTime;
@@ -81,15 +84,18 @@ private EmailUtil emailUtil;
 
         if (user == null) {
             logger.warn("Login attempt with invalid username: {}", loginDTO.getUsername());
-            return Map.of("error", "Invalid credentials.");
+            throw new IllegalArgumentException("Invalid Username.");
+            //return Map.of("error", "Invalid credentials.");
         }
 
         if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
             logger.warn("Invalid password attempt for user: {}", loginDTO.getUsername());
-            return Map.of("error", "Invalid credentials.");
+            throw new IllegalArgumentException("Invalid password.");
         }
         if (!user.isEnabled()) {
-            return Map.of("error", "Your account is not verified.");
+            throw new IllegalArgumentException("Your account is not verified.");
+
+            //return Map.of("error", );
         }
         boolean isFirstLogin = user.isFirstLogin();
         if (isFirstLogin) {
@@ -224,10 +230,10 @@ private EmailUtil emailUtil;
 
         return "Email sent. Please verify the account within 15 minutes.";
     }
-
-    public String forgotPassword(String email) throws MessagingException {
+    public String handleForgotOtp(String email) throws MessagingException {
         Admin admin = adminRepository.findByEmail(email);
         Student student = null;
+
         if (admin == null) {
             student = studentRepository.findByEmail(email);
         }
@@ -245,16 +251,44 @@ private EmailUtil emailUtil;
         String otp = otpUtil.generateOtp();
         user.setPasswordResetToken(otp);
         user.setResetOtpExpiresAt(LocalDateTime.now().plusMinutes(15));
+
+        // Save the updated user
         if (admin != null) {
             adminRepository.save(admin);
         } else {
             studentRepository.save(student);
         }
 
+        // Send OTP email
         emailUtil.sendOtpEmail(email, otp);
         return "OTP sent to your email.";
     }
 
+    public String forgotUsername(String email) throws MessagingException {
+        return handleForgotOtp(email);
+    }
+
+    public String forgotPassword(String email) throws MessagingException {
+        return handleForgotOtp(email);
+    }
+
+
+    public String resetUsername(ResetUsernameDTO resetUsernameDTO){
+        String otp = resetUsernameDTO.getOtp();
+        String newUsername = resetUsernameDTO.getNewUsername();
+        User user = userRepository.findByPasswordResetToken(otp);
+        if(user == null){
+            throw  new IllegalArgumentException("Invalid OTP");
+        }
+        if (user.getResetOtpExpiresAt() == null || user.getResetOtpExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("OTP has expired");
+        }
+        user.setUsername(newUsername);
+        user.setPasswordResetToken(null);
+        user.setResetOtpExpiresAt(null);
+        userRepository.save(user);
+        return "username has been reset successfully";
+    }
     public String resetPassword(ResetPasswordDTO resetPasswordDTO) {
         String otp = resetPasswordDTO.getOtp();
         String newPassword = resetPasswordDTO.getNewPassword();
@@ -276,7 +310,13 @@ private EmailUtil emailUtil;
 
         return "Password has been reset successfully.";
     }
-
+    @Scheduled(fixedRate = 3600000)
+    @Transactional
+    public void cleanExpiredUnverifiedAccounts() {
+        LocalDateTime now = LocalDateTime.now();
+        userRepository.deleteExpiredUnverifiedAccounts(now);
+        System.out.println("Expired unverified accounts cleaned up at " + now);
+    }
 }
 
 

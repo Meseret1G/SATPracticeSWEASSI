@@ -49,6 +49,9 @@ public class StudentService {
     private PasswordEncoder passwordEncoder;
 
     public String registerStudent(RegisterDTO registerDTO, PasswordEncoder passwordEncoder) throws MessagingException {
+        if (userRepository.findByUsername(registerDTO.getUsername())!=null && userRepository.findByEmail(registerDTO.getEmail())!=null){
+            throw new IllegalArgumentException("Username and Email already in use");
+        }
         if (userRepository.findByEmail(registerDTO.getEmail()) != null) {
             throw new IllegalArgumentException("Email is already in use.");
         }
@@ -57,24 +60,26 @@ public class StudentService {
             throw new IllegalArgumentException("Username is already taken.");
         }
 
+
         String otp = otpUtil.generateOtp();
         try {
             emailUtil.sendOtpEmail(registerDTO.getEmail(), otp);
+            Student student = new Student();
+            student.setUsername(registerDTO.getUsername());
+            student.setEmail(registerDTO.getEmail());
+            student.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+            student.setOtp(otp);
+            student.setEnabled(false);
+            student.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
+            Role role = roleRepository.findByName("STUDENT");
+            student.setRole(role);
+            studentRepository.save(student);
+            return "User registered successfully! Please verify your email.";
         } catch (MessagingException e) {
-            throw new RuntimeException("Unable to send verification email. Please try again.");
+            throw new RuntimeException ("Unable to send verification email. Please try again.");
         }
 
-        Student student = new Student();
-        student.setUsername(registerDTO.getUsername());
-        student.setEmail(registerDTO.getEmail());
-        student.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
-        student.setOtp(otp);
-        student.setEnabled(false);
-        student.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
-        Role role = roleRepository.findByName("STUDENT");
-        student.setRole(role);
-        studentRepository.save(student);
-        return "User registered successfully! Please verify your email.";
+
     }
 
     public String studentInfo(StudentInfoDTO studentInfoDTO, String username) {

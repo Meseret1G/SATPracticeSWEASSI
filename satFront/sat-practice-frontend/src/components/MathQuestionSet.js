@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Typography, List, ListItem, Snackbar, Button, Card, CardContent, Divider, Box } from '@mui/material';
+import { Container, Typography, List, ListItem, Snackbar, Button, Card, CardContent} from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import HomeIcon from '@mui/icons-material/Home';
 import axios from 'axios';
@@ -30,10 +30,18 @@ const MathQuestionSet = () => {
         setStudentId(studentId);
         console.log('Student ID:', studentId); // Log the studentId
       })
-      .catch((err) => {
-        setError('Failed to fetch user data.');
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          alert('Session expired. Please log in again.');
+          setTimeout(() => {
+          navigate('/login'); 
+          }, 3000);
+        } else {
+          setError('Failed to fetch user data.');
         setSnackbarOpen(true);
-        console.error(err);
+        console.error(error);
+      }
+        
       });
 
     // Fetch all Math question sets
@@ -46,10 +54,18 @@ const MathQuestionSet = () => {
       .then((response) => {
         setQuestionSets(response.data);
       })
-      .catch((err) => {
-        setError('Failed to fetch question sets.');
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          alert('Session expired. Please log in again.');
+          setTimeout(() => {
+          navigate('/login'); 
+          }, 3000);
+        } else {
+          setError('Failed to fetch question sets.');
         setSnackbarOpen(true);
-        console.error(err);
+        console.error(error);
+      }
+        
       });
 
   }, []); // Empty dependency array, runs only once when component mounts
@@ -68,10 +84,18 @@ const MathQuestionSet = () => {
           const completedTitles = new Set(response.data.map((set) => set.title));
           setCompletedSets(completedTitles);
         })
-        .catch((err) => {
-          setError('Failed to fetch completed question sets.');
+        .catch((error) => {
+          if (error.response && error.response.status === 401) {
+            alert('Session expired. Please log in again.');
+            setTimeout(() => {
+            navigate('/login'); 
+            }, 3000);
+          } else {
+            setError('Failed to fetch completed question sets.');
           setSnackbarOpen(true);
-          console.error(err);
+          console.error(error);
+        }
+          
         });
     }
   }, [studentId]); // Re-fetch completed sets when studentId changes

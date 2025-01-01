@@ -12,9 +12,23 @@ const Register = () => {
     const navigate = useNavigate();
 
     const handleRegister = async (e) => {
-        e.preventDefault();
+        e.preventDefault();  // Prevent form submission before validation
         setIsLoading(true);
-        setMessage("");
+        setMessage("");  // Clear previous messages
+
+        // Validate email
+        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+            setMessage("Please enter a valid email address.");
+            setIsLoading(false);
+            return;  // Stop further execution if validation fails
+        }
+
+        // Validate password length
+        if (password.length < 6) {
+            setMessage("Password must be at least 6 characters.");
+            setIsLoading(false);
+            return;  // Stop further execution if validation fails
+        }
 
         try {
             const response = await axios.post("http://localhost:8080/student/register", {
