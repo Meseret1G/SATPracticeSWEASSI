@@ -20,7 +20,7 @@ import java.util.*;
 @Service
 public class JwtService {
 
-    private String secretkey="W3iOQUiS575K2JPHCCdtalPfvRrcmlcD50KaIWgdJKc=";
+    private String secretkey={password};
 
     @Autowired
     private RoleRepository roleRepository;
