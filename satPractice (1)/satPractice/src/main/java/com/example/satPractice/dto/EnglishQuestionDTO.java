@@ -1,10 +1,14 @@
 package com.example.satPractice.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class EnglishQuestionDTO {
     private Long id;
     private String text;

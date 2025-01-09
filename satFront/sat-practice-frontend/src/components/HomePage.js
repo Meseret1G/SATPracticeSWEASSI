@@ -1,130 +1,138 @@
 import React from 'react';
-import { Container, Typography, Button, Box, Grid } from '@mui/material';
+import { Typography, Button, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Fade } from '@mui/material';
-import { keyframes } from '@mui/system';
-import { Email, Phone, LocationOn } from '@mui/icons-material'; // Import icons
+import { Email, Phone, LocationOn } from '@mui/icons-material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-
-const fadeIn = keyframes`
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-`;
+import backgroundImage from './baground.jpg';
 
 const HeroSection = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.secondary.main,
+    position: 'relative',
+    width: '100%',
+    height: '100vh', 
+    backgroundImage: `url(${backgroundImage})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center', 
+    alignItems: 'center',
+    textAlign: 'center',
     color: '#fff',
-    padding: theme.spacing(4),
-    borderRadius: '8px',
-    margin: '10px',
-    transition: 'transform 0.3s ease',
-    '&:hover': {
-        transform: 'scale(1.02)',
+    '&::before': {
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.8)', 
+        zIndex: 1,
     },
-}));
-
-const DescriptionContainer = styled(Box)(({ theme }) => ({
-    backgroundColor: '#e3f2fd', 
-    padding: theme.spacing(2),
-    borderRadius: '8px',
-    marginBottom: theme.spacing(2),
+    '& > *': {
+        position: 'relative',
+        zIndex: 2, 
+    },
+    animation: 'fadeIn 1.5s ease-out',
+    '@keyframes fadeIn': {
+        '0%': { opacity: 0, transform: 'translateY(30px)' },
+        '100%': { opacity: 1, transform: 'translateY(0)' },
+    },
 }));
 
 const Title = styled(Typography)(({ theme }) => ({
-    fontSize: '3rem',
-    fontFamily: "'Dancing Script', cursive",
+    fontSize: '6.5rem',
     fontWeight: 'bold',
-    marginBottom: theme.spacing(1),
-    color: theme.palette.secondary.main, 
-}));
-
-const Description = styled(Typography)(({ theme }) => ({
-    fontSize: '1.25rem',
-    margin: theme.spacing(2, 0),
-    opacity: 0,
-    animation: `${fadeIn} 1s forwards`,
-    color: '#000', 
+    fontFamily: "'Poppins', sans-serif", 
+    textShadow: '2px 2px 6px rgba(0,0,0,0.3)',
+    marginBottom: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+        fontSize: '3rem',
+    },
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
-    marginTop: theme.spacing(2),
+    position: 'absolute',
+    bottom: theme.spacing(4),
+    right: theme.spacing(4),
     padding: '12px 24px',
     fontSize: '1.2rem',
-    transition: 'background-color 0.3s ease',
+    backgroundColor: theme.palette.primary.main,
+    color: '#fff',
+    transition: 'background-color 0.3s ease, transform 0.3s ease',
     '&:hover': {
-        backgroundColor: theme.palette.secondary.dark,
+        backgroundColor: theme.palette.primary.dark,
+        transform: 'scale(1.05)',
     },
-    display: 'flex',
-    alignItems: 'center',
+    [theme.breakpoints.down('sm')]: {
+        bottom: theme.spacing(2),
+        right: theme.spacing(2),
+        fontSize: '1rem',
+    },
 }));
 
 const ContactInfo = styled(Box)(({ theme }) => ({
-    marginTop: theme.spacing(4),
-    padding: theme.spacing(2),
     backgroundColor: theme.palette.primary.main,
-    borderRadius: '8px',
     color: '#fff',
+    padding: theme.spacing(4),
+    borderRadius: '8px',
+    marginTop: theme.spacing(4),
+    maxWidth: '800px',
+    margin: 'auto',
     textAlign: 'center',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+    '& svg': {
+        marginRight: theme.spacing(1),
+    },
 }));
 
 const FooterText = styled(Typography)(({ theme }) => ({
     fontSize: '0.75rem',
     marginTop: theme.spacing(2),
     color: '#ccc',
+    textAlign: 'center',
+    position: 'relative',
+    bottom: 0,
+    width: '100%',
+    padding: theme.spacing(2),
 }));
 
 const HomePage = () => {
     return (
-        <Container maxWidth="lg">
-            <Fade in={true} timeout={1000}>
-                <HeroSection>
-                    <Grid container spacing={4}>
-                        <Grid item xs={12} md={8}>
-                            <DescriptionContainer>
-                                <Title variant="h1">ACE SAT</Title>
-                                <Description variant="body1">
-                                    Your ultimate destination for SAT preparation. Join us to enhance your skills and achieve your dream score! 
-                                    We provide comprehensive resources, including practice tests, study materials, and expert guidance tailored to help you succeed. 
-                                    <Description>
-                                    Our team of experienced educators is dedicated to ensuring you have the tools you need to excel. Prepare with confidence and 
-                                    take the first step towards your future. Our platform is designed to adapt to your learning pace, offering personalized 
-                                    feedback and progress tracking. Don't leave your success to chance—join thousands of satisfied students who have transformed 
-                                    their SAT experience with us!
-                                    </Description>
-                                    
-                                </Description>
-                            </DescriptionContainer>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                            <ContactInfo>
-                                <Typography variant="h6">Contact Us</Typography>
-                                <Typography variant="body1"><Email /> support@acesat.com</Typography>
-                                <Typography variant="body1"><Phone /> (123) 456-7890</Typography>
-                                <Typography variant="body1"><LocationOn /> 123 SAT Prep Lane, Education City</Typography>
-                            </ContactInfo>
-                        </Grid>
-                    </Grid>
-                    <Box display="flex" justifyContent="flex-end">
-                        <StyledButton
-                            variant="contained"
-                            color="primary"
-                            onClick={() => window.location.href = '/login'}
-                        >
-                            Get Started <ArrowForwardIcon style={{ marginLeft: '8px' }} />
-                        </StyledButton>
-                    </Box>
-                    <FooterText variant="body2">
-                        © 2024 ACE SAT. All rights reserved. License information or other disclaimers can go here.
-                    </FooterText>
-                </HeroSection>
-            </Fade>
-        </Container>
+        <>
+            <HeroSection>
+                <Box>
+                    <Title variant="h1">
+                        ACE SAT
+                    </Title>
+                    <Typography variant="h6" style={{ margin: '16px 0' }}>
+                        Your ultimate destination for SAT preparation. Enhance your skills and achieve your dream score!
+                    </Typography>
+                </Box>
+                <StyledButton onClick={() => (window.location.href = '/login')}>
+                    Get Started <ArrowForwardIcon style={{ marginLeft: '8px' }} />
+                </StyledButton>
+            </HeroSection>
+
+            <Box mt={4} px={2}>
+                <ContactInfo>
+                    <Typography variant="h6">Contact Us</Typography>
+                    <Typography variant="body1">
+                        <Email /> support@acesat.com
+                    </Typography>
+                    <Typography variant="body1">
+                        <Phone /> 090 000 000
+                    </Typography>
+                    <Typography variant="body1">
+                        <LocationOn /> 123 SAT Prep Lane, Education City
+                    </Typography>
+                </ContactInfo>
+            </Box>
+
+            <FooterText variant="body2">
+                © 2024 ACE SAT. All rights reserved. License information or other disclaimers can go here.
+            </FooterText>
+        </>
     );
 };
 

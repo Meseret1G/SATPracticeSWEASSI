@@ -34,10 +34,10 @@ const AdminDashboard = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [openPractice, setOpenPractice] = useState(false);
-  const [user, setUser ] = useState(null); // Correctly define user state
-  const [message, setMessage] = useState(''); // Correctly define message state
-  const [loading, setLoading] = useState(true); // Correctly define loading state
-  const [messageType, setMessageType] = useState(''); // Correctly define messageType state
+  const [user, setUser ] = useState(null); 
+  const [message, setMessage] = useState(''); 
+  const [loading, setLoading] = useState(true); 
+  const [messageType, setMessageType] = useState(''); 
   const [snackbarOpen, setSnackbarOpen] = useState(false); 
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -213,7 +213,7 @@ const AdminDashboard = () => {
   return (
     <Box display="flex" flexDirection="column" height="100vh">
       <CssBaseline />
-      <AppBar position="static" sx={{ backgroundColor: '#3f51b5' }}>
+      <AppBar position="static" color="primary" >
         <Toolbar>
           <IconButton edge="start" color="inherit" onClick={toggleDrawer}>
             <MenuIcon />
@@ -221,9 +221,9 @@ const AdminDashboard = () => {
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             Admin Dashboard
           </Typography>
-          <Button color="inherit" startIcon={<SettingsIcon />} onClick={() => setSettingsOpen(!settingsOpen)}>
+          {/* <Button color="inherit" startIcon={<SettingsIcon />} onClick={() => setSettingsOpen(!settingsOpen)}>
             Settings
-          </Button>
+          </Button> */}
           <Button color="inherit" onClick={handleLogout} startIcon={<ExitToAppIcon />}>
             Logout
           </Button>
@@ -231,7 +231,7 @@ const AdminDashboard = () => {
       </AppBar>
 
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
-  <Box sx={{ width: 250, padding: 2, bgcolor: '#e3f2fd' }}>
+  <Box sx={{ width: 250, padding: 2}}>
     <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 2, textAlign: 'center' }}>
       Admin Menu
     </Typography>
@@ -295,10 +295,10 @@ const AdminDashboard = () => {
         </List>
       </Collapse>
 
-      <ListItem button onClick={toggleDrawer}>
+      {/* <ListItem button onClick={toggleDrawer}>
         <ReportIcon sx={{ marginRight: 1 }} />
         <ListItemText primary="Reports" />
-      </ListItem>
+      </ListItem> */}
     </List>
   </Box>
 </Drawer>

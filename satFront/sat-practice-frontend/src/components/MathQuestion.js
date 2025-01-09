@@ -161,7 +161,7 @@ const MathQuestionForm = () => {
   return (
     <Paper elevation={3} style={{ padding: '30px', maxWidth: '800px', margin: '20px auto', backgroundColor: '#e3f2fd' }}>
       <Button
-        variant="contained"
+        variant="outlined"
         color="primary"
         onClick={handleBackButtonClick}
         sx={{ marginBottom: 2 }}

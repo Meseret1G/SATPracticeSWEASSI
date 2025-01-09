@@ -119,12 +119,17 @@ public class StudentService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Student user = studentRepository.findByUsername(username);
+        if (editInfo.getTargetScore() < 0 || editInfo.getTargetScore() > 1600) {
+            throw new IllegalArgumentException("Target score must be between 0 and 1600.");
+        }
         if (user != null) {
             user.setFirstName(editInfo.getFirstName());
             user.setLastName(editInfo.getLastName());
             user.setUsername(editInfo.getUsername());
+            user.setTargetScore(editInfo.getTargetScore());
             return userRepository.save(user);
         }
         return null;
     }
+
 }

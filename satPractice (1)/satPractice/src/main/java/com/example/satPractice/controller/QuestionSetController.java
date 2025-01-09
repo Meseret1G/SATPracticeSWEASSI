@@ -6,6 +6,9 @@ import com.example.satPractice.repository.QuestionSetRepository;
 import com.example.satPractice.service.QuestionAnsweringService;
 import com.example.satPractice.service.QuestionSetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,13 +65,13 @@ public class QuestionSetController {
     }
 
     @GetMapping("/byType")
-    public ResponseEntity<List<QuestionSet>> getQuestionSetsByType(@RequestParam String type) {
-        try {
-            List<QuestionSet> questionSets = questionSetService.findQuestionSetsByType(type);
-            return ResponseEntity.ok(questionSets);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
+    public ResponseEntity<Page<QuestionSet>> getQuestionSetsByType(
+            @RequestParam String type,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<QuestionSet> questionSets = questionSetService.findQuestionSetsByType(type, pageable);
+        return ResponseEntity.ok(questionSets);
     }
 
     @GetMapping("/title")
@@ -128,13 +131,10 @@ public class QuestionSetController {
             @PathVariable Long questionId) {
 
         try {
-            // Call service to get the question by set title and ID
             Object question = questionAnsweringService.getQuestionBySetAndId(questionSetTitle, questionId);
 
-            // Return the question if found
             return ResponseEntity.ok(question);
         } catch (IllegalArgumentException e) {
-            // Return error message if the question or set is not found
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }

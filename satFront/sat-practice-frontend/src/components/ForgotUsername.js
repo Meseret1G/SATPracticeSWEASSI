@@ -50,7 +50,7 @@ const ForgotUsername = () => {
                     />
                     <Button
                         type="submit"
-                        variant="contained"
+                        variant="outlined"
                         color="primary"
                         fullWidth
                         disabled={isLoading}
@@ -62,7 +62,7 @@ const ForgotUsername = () => {
                 {message && <Alert severity="info" sx={{ marginTop: 2 }}>{message}</Alert>}
 
                 <Box display="flex" justifyContent="space-between" sx={{ marginTop: 2 }}>
-                    <Button onClick={() => navigate('/login')} color="primary">
+                    <Button variant="outlined" onClick={() => navigate('/login')} color="primary">
                         Back to Login
                     </Button>
                 </Box>

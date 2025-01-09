@@ -142,7 +142,7 @@ const DisplayEnglishQuestions = () => {
   return (
     <Paper elevation={3} style={{ padding: '20px', maxWidth: '800px', margin: '20px auto', borderRadius: '10px' }}>
       <Button
-        variant="contained"
+        variant="outlined"
         color="primary"
         onClick={() => navigate('/admin/dashboard')}
         sx={{ marginBottom: 2 }}

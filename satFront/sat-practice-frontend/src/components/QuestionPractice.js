@@ -135,8 +135,6 @@ const QuestionAnswering = () => {
         // Check if the question is already missed
         const alreadyMissed = responses.some(response => response.isCorrect === false && response.explanation === result.data.explanation);
         if (!alreadyMissed) {
-          // Increment missed answers count
-          // Assuming you have a state to track missed answers
           setMissedAnswersCount((prevCount) => prevCount + 1);
         }
       }
@@ -273,7 +271,7 @@ const QuestionAnswering = () => {
           </Typography>
           <Typography variant="h6">Your score: {score} out of {totalQuestions}</Typography>
           <Button
-            variant="contained"
+            variant="outlined"
             color="secondary"
             onClick={() => handlePracticeClick(title.includes('English') ? 'English' : 'Math')}
             style={{ marginTop: '20px' }}
@@ -288,7 +286,7 @@ const QuestionAnswering = () => {
               <Typography variant="h6" style={{ fontWeight: 'bold' }}>
                 Question {currentQuestionIndex + 1} of {totalQuestions}
               </Typography>
-              <Typography variant="body1" style={{ margin: '10px 0', fontSize: '16px' }}>
+              <Typography variant="body1" multiline style={{ margin: '10px 0', fontSize: '16px' }}>
                 {currentQuestion.text}
               </Typography>
               <RadioGroup
@@ -306,7 +304,7 @@ const QuestionAnswering = () => {
           </Card>
           {showExplanation && (
             <Box style={explanationStyles}>
-              <Typography style={{ fontWeight: 'bold' }}>
+              <Typography style={{ fontWeight: 'bold' }} multiline>
                 {responses[currentQuestionIndex]?.explanation}
               </Typography>
               <Button

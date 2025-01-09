@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Typography, List, ListItem, Snackbar, Button, Card, CardContent} from '@mui/material';
+import { Container, Typography, List, ListItem, Snackbar, Button, Card, CardContent } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
+import LockIcon from '@mui/icons-material/Lock';
 import HomeIcon from '@mui/icons-material/Home';
 import axios from 'axios';
 
@@ -11,6 +12,9 @@ const MathQuestionSet = () => {
   const [error, setError] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [studentId, setStudentId] = useState(null);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,91 +25,95 @@ const MathQuestionSet = () => {
       return;
     }
 
-    // Fetch the studentId from the 'me' endpoint
-    axios.get('http://localhost:8080/user/me', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
+    axios
+      .get('http://localhost:8080/user/me', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((response) => {
-        const studentId = response.data.id;
-        setStudentId(studentId);
-        console.log('Student ID:', studentId); // Log the studentId
+        setStudentId(response.data.id);
       })
       .catch((error) => {
-        if (error.response && error.response.status === 401) {
-          alert('Session expired. Please log in again.');
-          setTimeout(() => {
-          navigate('/login'); 
-          }, 3000);
-        } else {
-          setError('Failed to fetch user data.');
-        setSnackbarOpen(true);
-        console.error(error);
-      }
-        
+        console.error('Request failed:', error);
+        handleAuthError(error);
       });
-
-    // Fetch all Math question sets
-    axios.get('http://localhost:8080/question/byType?type=Math', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => {
-        setQuestionSets(response.data);
-      })
-      .catch((error) => {
-        if (error.response && error.response.status === 401) {
-          alert('Session expired. Please log in again.');
-          setTimeout(() => {
-          navigate('/login'); 
-          }, 3000);
-        } else {
-          setError('Failed to fetch question sets.');
-        setSnackbarOpen(true);
-        console.error(error);
-      }
-        
-      });
-
-  }, []); // Empty dependency array, runs only once when component mounts
+  }, []);
 
   useEffect(() => {
     if (studentId) {
-      // Fetch completed question sets for the student
-      console.log('Fetching completed question sets for student:', studentId); // Log before making the request
-      axios.get(`http://localhost:8080/question/${studentId}/completed-question-sets`, {
-        headers: {
-          'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
-          'Content-Type': 'application/json',
-        },
-      })
-        .then((response) => {
-          const completedTitles = new Set(response.data.map((set) => set.title));
-          setCompletedSets(completedTitles);
-        })
-        .catch((error) => {
-          if (error.response && error.response.status === 401) {
-            alert('Session expired. Please log in again.');
-            setTimeout(() => {
-            navigate('/login'); 
-            }, 3000);
-          } else {
-            setError('Failed to fetch completed question sets.');
-          setSnackbarOpen(true);
-          console.error(error);
-        }
-          
-        });
+      loadQuestionSets();
+      loadCompletedSets();
     }
-  }, [studentId]); // Re-fetch completed sets when studentId changes
+  }, [studentId]);
 
-  const handleTitleClick = (title) => {
-    if (title) {
-      navigate(`/questionSet/${encodeURIComponent(title)}`);
+  const loadQuestionSets = () => {
+    const token = sessionStorage.getItem('token');
+    setLoading(true);
+    axios
+      .get(`http://localhost:8080/question/byType?type=Math&page=${page}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        const sortedSets = [...response.data.content].sort((a, b) => a.id - b.id); // Sort by id
+        setQuestionSets((prev) => [...prev, ...sortedSets]);
+        setHasMore(!response.data.last);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch question sets:', error);
+        handleAuthError(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+  
+
+  const loadCompletedSets = () => {
+    const token = sessionStorage.getItem('token');
+    axios
+      .get(`http://localhost:8080/question/${studentId}/completed-question-sets`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        const completedTitles = new Set(response.data.map((set) => set.title));
+        setCompletedSets(completedTitles);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch completed question sets:', error);
+        handleAuthError(error);
+      });
+  };
+
+  const handleAuthError = (error) => {
+    if (error.response?.status === 401) {
+      alert('Session expired. Please log in again.');
+      setTimeout(() => navigate('/login'), 3000);
+    } else if (error.response?.status === 403) {
+      alert('Access denied. You do not have permission to access this resource.');
     } else {
-      setError('Title is missing.');
+      setError('An error occurred. Please try again.');
       setSnackbarOpen(true);
+    }
+  };
+
+  const handleScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target.documentElement;
+    if (scrollHeight - scrollTop <= clientHeight + 10 && hasMore) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [hasMore]);
+
+  useEffect(() => {
+    if (page > 0) loadQuestionSets();
+  }, [page]);
+
+  const handleTitleClick = (title, index) => {
+    if (isSetUnlocked(index)) {
+      navigate(`/questionSet/${encodeURIComponent(title)}`);
     }
   };
 
@@ -113,10 +121,22 @@ const MathQuestionSet = () => {
     setSnackbarOpen(false);
   };
 
+  const isSetUnlocked = (index) => {
+    if (completedSets.has(questionSets[index].title)) {
+      return true;
+    }
+
+    const completedArray = Array.from(completedSets);
+    const lastCompletedTitle = completedArray[completedArray.length - 1];
+
+    const lastCompletedIndex = questionSets.findIndex(set => set.title === lastCompletedTitle);
+    return index === lastCompletedIndex + 1;
+  };
+
   return (
     <Container sx={{ paddingTop: 3 }}>
       <Button
-        variant="contained"
+        variant="outlined"
         color="primary"
         startIcon={<HomeIcon />}
         onClick={() => navigate('/student/dashboard')}
@@ -141,32 +161,50 @@ const MathQuestionSet = () => {
         />
       )}
 
-      {questionSets.length > 0 ? (
-        <List>
-          {questionSets.map((questionSet) => (
-            <ListItem
-              button
-              key={questionSet.id}
-              onClick={() => handleTitleClick(questionSet.title)}
-              sx={{ marginBottom: 2 }}
+      {loading && <Typography align="center">Loading more question sets...</Typography>}
+
+      <List>
+        {questionSets.map((questionSet, index) => (
+          <ListItem
+            button
+            key={questionSet.id}
+            onClick={() => handleTitleClick(questionSet.title, index)}
+            sx={{ marginBottom: 2 }}
+            disabled={!isSetUnlocked(index)}
+          >
+            <Card
+              sx={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                padding: 2,
+                borderRadius: 2,
+                boxShadow: 2,
+                opacity: !isSetUnlocked(index) ? 0.5 : 1,
+              }}
             >
-              <Card sx={{ width: '100%', display: 'flex', alignItems: 'center', padding: 2, borderRadius: 2, boxShadow: 2 }}>
-                <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-                  <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-                    {questionSet.title}
-                    {/* Show checkmark if the question set is completed */}
-                    {completedSets.has(questionSet.title) && (
-                      <CheckIcon sx={{ marginLeft: 1, color: 'green' }} />
-                    )}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </ListItem>
-          ))}
-        </List>
-      ) : (
+              <CardContent
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '100%',
+                }}
+              >
+                <Typography variant="h6">
+                  {questionSet.title}
+                  {completedSets.has(questionSet.title) && <CheckIcon sx={{ marginLeft: 1, color: 'green' }} />}
+                  {!isSetUnlocked(index) && <LockIcon sx={{ marginLeft: 1, color: 'gray' }} />}
+                </Typography>
+              </CardContent>
+            </Card>
+          </ListItem>
+        ))}
+      </List>
+
+      {!hasMore && questionSets.length === 0 && (
         <Typography variant="h6" align="center">
-          No Math question sets available.
+          No more question sets available.
         </Typography>
       )}
     </Container>

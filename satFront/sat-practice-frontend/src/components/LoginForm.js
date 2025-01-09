@@ -103,7 +103,7 @@ const LoginForm = () => {
                     />
                     <Button
                         type="submit"
-                        variant="contained"
+                        variant="outlined"
                         color="primary"
                         fullWidth
                         disabled={isLoading}

@@ -6,6 +6,8 @@ import com.example.satPractice.repository.MathQuestionRepository;
 import com.example.satPractice.repository.QuestionSetRepository;
 import com.example.satPractice.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,32 +52,49 @@ public class QuestionSetService {
             throw new IllegalArgumentException("You must add exactly 5 questions of the selected type.");
         }
     }
-    private boolean mathQuestionExists(MathQuestion mathQuestion) {
-        return mathQuestionRepository.existsByText(mathQuestion.getText());
-    }
+private boolean mathQuestionExists(MathQuestion mathQuestion) {
+    return mathQuestionRepository.existsByTextAndOptionAAndOptionBAndOptionCAndOptionD(
+            mathQuestion.getText(),
+            mathQuestion.getOptionA(),
+            mathQuestion.getOptionB(),
+            mathQuestion.getOptionC(),
+            mathQuestion.getOptionD()
+    );
+}
+
+
     private boolean englishQuestionExists(EnglishQuestion englishQuestion) {
-        return englishQuestionRepository.existsByText(englishQuestion.getText());
+        return englishQuestionRepository.existsByTextAndOptionAAndOptionBAndOptionCAndOptionD(
+                englishQuestion.getText(),
+                englishQuestion.getOptionA(),
+                englishQuestion.getOptionB(),
+                englishQuestion.getOptionC(),
+                englishQuestion.getOptionD()
+        );
     }
+
+
     private String generateSetTitle(String type) {
         long count = questionSetRepository.countByTitleStartingWith(type);
         return type + " Set " + (count + 1);
     }
 
-    public List<QuestionSet> findQuestionSetsByType(String type) {
+    public Page<QuestionSet> findQuestionSetsByType(String type, Pageable pageable) {
         if (type == null || (!type.equalsIgnoreCase("Math") && !type.equalsIgnoreCase("English"))) {
             throw new IllegalArgumentException("Invalid type. Please specify 'Math' or 'English'.");
         }
 
         if (type.equalsIgnoreCase("Math")) {
-            return questionSetRepository.findByMathQuestionIsNotEmpty();
+            return questionSetRepository.findByMathQuestionIsNotEmpty(pageable);
         } else {
-            return questionSetRepository.findByEnglishQuestionsIsNotEmpty();
+            return questionSetRepository.findByEnglishQuestionsIsNotEmpty(pageable);
         }
     }
 
-    public List<QuestionSet> getQuestionSetsByTitle(String title) {
-        return questionSetRepository.findByTitle(title);
-    }
+
+//    public List<QuestionSet> getQuestionSetsByTitle(String title) {
+//        return questionSetRepository.findByTitle(title);
+//    }
 
     public QuestionSet startPracticeSession(Long studentId, Long questionSetId) {
         QuestionSet questionSet = questionSetRepository.findById(questionSetId)
@@ -93,25 +112,25 @@ public class QuestionSetService {
         return questionSet;
     }
 
-    public List<MissedQuestion> getMissedQuestions(Long studentId) {
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
-
-        return student.getMissedQuestions();
-    }
-    public long countMissedQuestions(Long studentId) {
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
-
-        return student.getMissedQuestions().size();
-    }
-    public Optional<MathQuestion> findMathQuestionByTitleAndId(String title, Long id) {
-        return mathQuestionRepository.findByQuestionSetTitleAndId(title, id);
-    }
-
-    public Optional<EnglishQuestion> findEnglishQuestionByTitleAndId(String title, Long id) {
-        return englishQuestionRepository.findByQuestionSetTitleAndId(title, id);
-    }
+//    public List<MissedQuestion> getMissedQuestions(Long studentId) {
+//        Student student = studentRepository.findById(studentId)
+//                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+//
+//        return student.getMissedQuestions();
+//    }
+//    public long countMissedQuestions(Long studentId) {
+//        Student student = studentRepository.findById(studentId)
+//                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+//
+//        return student.getMissedQuestions().size();
+//    }
+//    public Optional<MathQuestion> findMathQuestionByTitleAndId(String title, Long id) {
+//        return mathQuestionRepository.findByQuestionSetTitleAndId(title, id);
+//    }
+//
+//    public Optional<EnglishQuestion> findEnglishQuestionByTitleAndId(String title, Long id) {
+//        return englishQuestionRepository.findByQuestionSetTitleAndId(title, id);
+//    }
     public List<QuestionSet> findByTitle(String title) {
         return questionSetRepository.findByTitle(title);
     }

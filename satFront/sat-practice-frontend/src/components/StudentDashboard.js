@@ -45,6 +45,7 @@ const StudentDashboard = () => {
     firstName: '',
     lastName: '',
     username: '',
+    targetScore:'',
   });
   const [error, setError] = useState('');
   const [messageDrawerOpen, setMessageDrawerOpen] = useState(false);
@@ -79,6 +80,7 @@ const StudentDashboard = () => {
         firstName: response.data.firstName || '',
         lastName: response.data.lastName || '',
         username: response.data.username || '',
+        targetScore: response.data.targetScore || '',
       });
       setLoading(false); 
     } catch (err) {
@@ -277,7 +279,7 @@ const StudentDashboard = () => {
 
   return (
     <Box display="flex" flexDirection="column" height="100vh" sx={{ margin: 2, backgroundColor: '#f0f0f0' }}>
-      <AppBar position="static" sx={{ backgroundColor: '#3f51b5' }}>
+      <AppBar position="static" color="primary" >
         <Toolbar>
           <IconButton edge="start" color="inherit" onClick={() => setDrawerOpen(!drawerOpen)}>
             <MenuIcon />
@@ -290,7 +292,7 @@ const StudentDashboard = () => {
         <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
           <Box sx={{ width: 250, padding: 2 }}>
             <Stack direction="row" alignItems="center" mb={2}>
-              <Avatar sx={{ bgcolor: '#3f51b5', marginRight: 1 }}>
+              <Avatar sx={{ bgcolor: 'primary', marginRight: 1 }}>
                 {user && user.firstName ? user.firstName.charAt(0) : 'U'}
               </Avatar>
               <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333' }}>
@@ -323,15 +325,22 @@ const StudentDashboard = () => {
                   </ListItem>
                 </List>
               </Collapse>
-
-              <ListItem button onClick={() => setDrawerOpen(false)}>
+              <ListItem button onClick={() =>handleMissedPractice()}>
+                {/* <SettingsIcon sx={{ marginRight: 1 }} /> */}
+                <ListItemText primary="Missed Questions"  />
+                <Typography variant="h9" >
+                    {missedQuestionsCount !== null ? (
+                      <small>{missedQuestionsCount}</small>
+                    ) : (
+                      <h3>Loading...</h3>
+                    )}
+                  </Typography>
+              </ListItem>
+              <ListItem button onClick={() => navigate("/about-sat")}>
                 <HelpOutline sx={{ marginRight: 1 }} />
                 <ListItemText primary="About SAT" />
               </ListItem>
-              <ListItem button onClick={() => setDrawerOpen(false)}>
-                <SettingsIcon sx={{ marginRight: 1 }} />
-                <ListItemText primary="Settings" />
-              </ListItem>
+              
               <ListItem button onClick={handleLogout}>
                 <ExitToAppIcon sx={{ marginRight: 1 }} />
                 <ListItemText primary="Logout" />
@@ -351,7 +360,7 @@ const StudentDashboard = () => {
             <Grid item xs={12} sm={6} md={4}>
               <Card elevation={4} sx={{ '&:hover': { boxShadow: 20 } }}>
                 <CardContent>
-                  <Typography variant="h6" sx={{ color: '#3f51b5', fontWeight: 'bold' }}>Target Score</Typography>
+                  <Typography variant="h6" sx={{ color:"primary", fontWeight: 'bold' }}>Target Score</Typography>
                   <Box display="flex" alignItems="center">
                     <Typography variant="h5" sx={{ fontWeight: 'bold', marginRight: 2 }}>
                       {user && user.targetScore ? user.targetScore : 'Loading...'}
@@ -370,7 +379,7 @@ const StudentDashboard = () => {
             <Grid item xs={12} sm={6} md={4}>
             <Card elevation={4} sx={{ '&:hover': { boxShadow: 20 } }}>
       <CardContent>
-        <Typography variant="h6" sx={{ color: '#3f51b5', fontWeight: 'bold' }}>
+        <Typography variant="h6" sx={{ color:"primary", fontWeight: 'bold' }}>
           Percent Score
         </Typography>
         <Box display="flex" alignItems="center">
@@ -380,15 +389,14 @@ const StudentDashboard = () => {
             <Typography color="error">Error loading score</Typography>
           ) : (
             <>
-              <Typography variant="h5" sx={{ fontWeight: 'bold', marginRight: 2 }}>
-                {user.percentScore.toFixed(2)}%
-              </Typography>
+             <Typography variant="h5" sx={{ fontWeight: 'bold', marginRight: 2 ,color:"primary"}}>
+  {user && user.percentScore !== undefined ? user.percentScore.toFixed(2) : '0.00'}%
+</Typography>
               <Slider
                 aria-label="Percent Score"
-                value={user.percentScore}
-                max={100}
+                value={user?.percentScore ?? 0}                max={100}
                 disabled
-                sx={{ width: '100%' }}
+                sx={{ color:"primary", width: '100%' }}
               />
             </>
           )}
@@ -397,9 +405,9 @@ const StudentDashboard = () => {
     </Card>
     </Grid>
             <Grid item xs={12} sm={6} md={4}>
-              <Card elevation={4} sx={{ '&:hover': { boxShadow: 20 } }} onClick={() =>handleMissedPractice()}>
+              <Card elevation={4} sx={{ '&:hover': { boxShadow: 20 } }}>
                 <CardContent>
-                  <Typography variant="h6" sx={{ color: '#3f51b5', fontWeight: 'bold' }}>Missed Questions</Typography>
+                  <Typography variant="h6" sx={{ color:"primary", fontWeight: 'bold' }}>Missed Questions</Typography>
                   <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
                     {missedQuestionsCount !== null ? (
                       <h3>{missedQuestionsCount}</h3>
@@ -525,6 +533,31 @@ const StudentDashboard = () => {
                   disabled={!isEditing}
                   sx={{ bgcolor: isEditing ? 'white' : '#f0f0f0' }}
                 />
+              </Grid>
+              <Grid item xs={12}>
+              <TextField
+                name="targetScore"
+                label="Target Score"
+                type="number" // Ensures numeric input
+                value={formData.targetScore}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value, 10);
+                  if (!isNaN(value)) {
+                    setFormData({ ...formData, targetScore: value });
+                  }
+                }}
+                error={formData.targetScore < 0 || formData.targetScore > 1600}
+                helperText={
+                  formData.targetScore < 0 || formData.targetScore > 1600
+                    ? "Target score must be between 0 and 1600."
+                    : ""
+                }
+                fullWidth
+                variant="outlined"
+                disabled={!isEditing}
+              />
+
+
               </Grid>
             </Grid>
           </DialogContent>

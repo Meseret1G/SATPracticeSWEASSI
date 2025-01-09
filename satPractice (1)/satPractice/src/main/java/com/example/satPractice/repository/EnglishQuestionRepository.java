@@ -12,7 +12,9 @@ import java.util.Optional;
 @Repository
 public interface EnglishQuestionRepository extends JpaRepository<EnglishQuestion,Long> {
     List<EnglishQuestion> findByQuestionType(String questionType);
-    Optional<EnglishQuestion> findByQuestionSetTitleAndId(String title, Long id);
-    boolean existsByText(String text);
+//    Optional<EnglishQuestion> findByQuestionSetTitleAndId(String title, Long id);
+//    boolean existsByText(String text);
+    boolean existsByTextAndOptionAAndOptionBAndOptionCAndOptionD(String text, String optionA, String optionB, String optionC, String optionD);
+    Optional<EnglishQuestion> findByTextAndOptionAAndOptionBAndOptionCAndOptionD(String text, String optionA, String optionB, String optionC, String optionD);
 
 }

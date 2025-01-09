@@ -191,10 +191,10 @@ const MissedQuestionsList = () => {
     <Box sx={{ padding: 2 }}>
       <Box display="flex" alignItems="center" sx={{ marginBottom: 2 }}>
       <Button
-        variant="contained"
+        variant="outlined"
         color="primary"
         onClick={() => navigate('/student/dashboard')}
-        sx={{ marginRight: 2 }} // Add margin to the right for spacing
+        sx={{ marginRight: 2 }} 
       >
         Back
       </Button>

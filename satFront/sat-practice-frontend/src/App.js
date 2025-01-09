@@ -1,13 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Container } from '@mui/material';
-import { createGlobalStyle } from 'styled-components'; // Import createGlobalStyle
+import { createGlobalStyle } from 'styled-components'; 
+import { AppBar, Toolbar, Typography } from '@mui/material';
 import LoginForm from './components/LoginForm'; 
 import RegisterForm from './components/RegisterForm'; 
 import VerifyAccountForm from './components/VerifyAccountForm'; 
 import ResetPassword from './components/ResetPassword'; 
 import ResetUsername from './components/ResetUsername'; 
-
+import AboutSAT from "./components/AboutSAT";
 import StudentDashboard from './components/StudentDashboard'; 
 import AdminDashboard from './components/AdminDashboard'; 
 import ForgotPassword from './components/ForgotPassword';
@@ -35,21 +36,33 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Inter', sans-serif;
     }
 `;
+function Header() {
+    return (
+        <AppBar position="fixed" color="tertiary">
+            <Toolbar>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                    ACE SAT
+                </Typography>
+            </Toolbar>
+        </AppBar>
+    );
+}
 
 function App() {
     return (
         <>
             <GlobalStyle />
             <Router>
-                <Container maxWidth="lg" style={{ marginTop: '20px' }}>
-                    <Routes>
+            <Header />
+            <Container maxWidth="lg" style={{ marginTop: '80px' }}> {/* Adjust marginTop to your header height */}
+            <Routes>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/login" element={<LoginForm />} />
                         <Route path="/register" element={<RegisterForm />} />
                         <Route path="/verify-account" element={<VerifyAccountForm />} />
                         <Route path="/reset-password" element={<ResetPassword />} />
                         <Route path="/reset-username" element={<ResetUsername />} />
-
+                        <Route path="/about-sat" element={<AboutSAT />} />
                         <Route path="/student/dashboard" element={<StudentDashboard />} />
                         <Route path="/add-math-questions" element={<MathQuestion />} />
                         <Route path="/add-english-questions" element={<EnglishQuestion />} />

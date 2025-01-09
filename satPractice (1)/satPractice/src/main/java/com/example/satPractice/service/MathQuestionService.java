@@ -18,8 +18,8 @@ public class MathQuestionService {
     @Autowired
     private MathQuestionRepository mathQuestionRepository;
 
-    @Autowired
-    private QuestionSetRepository questionSetRepository;
+//    @Autowired
+//    private QuestionSetRepository questionSetRepository;
 
     public List<MathQuestionDTO> getMathQuestionsByType(String questionType) {
         List<MathQuestion> questions = mathQuestionRepository.findByTopic(questionType);
@@ -51,6 +51,23 @@ public class MathQuestionService {
         MathQuestion mathQuestion=existingQuestion.get();
         if (updatedMathQuestion.getId() != null && !updatedMathQuestion.getId().equals(id)) {
             throw new IllegalArgumentException("Mismatched IDs: Updated question ID must match the existing question ID.");
+        }
+        boolean duplicateExists = mathQuestionRepository.existsByTextAndOptionAAndOptionBAndOptionCAndOptionD(
+                updatedMathQuestion.getText(),
+                updatedMathQuestion.getOptionA(),
+                updatedMathQuestion.getOptionB(),
+                updatedMathQuestion.getOptionC(),
+                updatedMathQuestion.getOptionD()
+        );
+        if (duplicateExists) {
+            Optional<MathQuestion> duplicateQuestion = mathQuestionRepository
+                    .findByTextAndOptionAAndOptionBAndOptionCAndOptionD(updatedMathQuestion.getText(),
+                            updatedMathQuestion.getOptionA(), updatedMathQuestion.getOptionB(),
+                            updatedMathQuestion.getOptionC(), updatedMathQuestion.getOptionD());
+
+            if (duplicateQuestion.isPresent() && !duplicateQuestion.get().getId().equals(id)) {
+                throw new IllegalArgumentException("Duplicate question found: A question with the same text and options already exists.");
+            }
         }
         QuestionSet existingQuestionSet = mathQuestion.getQuestionSet();
 

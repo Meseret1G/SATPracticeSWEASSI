@@ -1,6 +1,8 @@
 package com.example.satPractice.repository;
 
 import com.example.satPractice.model.QuestionSet;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,8 +13,9 @@ import java.util.Optional;
 public interface QuestionSetRepository extends JpaRepository<QuestionSet,Long> {
     long countByTitleStartingWith(String prefix);
 
-    List<QuestionSet> findByMathQuestionIsNotEmpty();
+    Page<QuestionSet> findByMathQuestionIsNotEmpty(Pageable pageable);
     List<QuestionSet> findByTitle(String title);
-    List<QuestionSet> findByEnglishQuestionsIsNotEmpty();
+    Page<QuestionSet> findByEnglishQuestionsIsNotEmpty(Pageable pageable);
+
 
 }
