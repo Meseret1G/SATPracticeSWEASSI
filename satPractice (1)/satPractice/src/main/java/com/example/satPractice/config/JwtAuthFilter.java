@@ -47,7 +47,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            // Log request headers and cookies for debugging (ensure to replace with proper logging for production)
+            // Log request headers and cookies for debugging 
             logger.info("Request Headers:");
             request.getHeaderNames().asIterator().forEachRemaining(headerName -> {
                 logger.info("{}: {}", headerName, request.getHeader(headerName));
@@ -87,13 +87,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 // Validate token
                 jwtService.validateToken(token, user);  // This will throw an exception if the token is invalid
 
-                // Convert the roles list (strings) to a list of SimpleGrantedAuthority
+                // Convert the roles list to a list of SimpleGrantedAuthority
                 List<SimpleGrantedAuthority> authorities = new ArrayList<>();
                 for (String role : jwtService.extractRoles(token)) {
                     authorities.add(new SimpleGrantedAuthority(role));
                 }
 
-                // Create authentication token with authorities (roles)
+                // Create authentication token with authorities 
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, authorities);
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
