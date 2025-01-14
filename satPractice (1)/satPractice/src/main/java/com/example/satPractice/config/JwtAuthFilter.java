@@ -47,7 +47,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            // Log request headers and cookies for debugging 
             logger.info("Request Headers:");
             request.getHeaderNames().asIterator().forEachRemaining(headerName -> {
                 logger.info("{}: {}", headerName, request.getHeader(headerName));
@@ -80,27 +79,23 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             logger.info("Extracted username: {}", userName);
             logger.info("Token: {}", token);
 
-            // If a username is found and authentication is not set, proceed with authentication
             if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails user = userService.loadUserByUsername(userName);
 
-                // Validate token
-                jwtService.validateToken(token, user);  // This will throw an exception if the token is invalid
+                jwtService.validateToken(token, user);
 
-                // Convert the roles list to a list of SimpleGrantedAuthority
                 List<SimpleGrantedAuthority> authorities = new ArrayList<>();
                 for (String role : jwtService.extractRoles(token)) {
                     authorities.add(new SimpleGrantedAuthority(role));
                 }
 
-                // Create authentication token with authorities 
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, authorities);
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 logger.info("Authentication successful for user: {}", userName);
             }
 
-            filterChain.doFilter(request, response); // Continue filter chain
+            filterChain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
             logger.warn("Token expired for user: {}", e.getClaims().getSubject());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

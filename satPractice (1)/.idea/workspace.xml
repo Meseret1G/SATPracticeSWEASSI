@@ -5,84 +5,76 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b0a32cb-ec88-486e-929f-c2423c70cf3b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../satFront/sat-practice-frontend/src/components/HomePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/../satFront/sat-practice-frontend/src/components/HomePage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/satPractice (1).iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/.env" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/.gitattributes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/mvnw" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/mvnw.cmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/Application.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/config/EmailConfiguration.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/config/JwtAuthFilter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/config/SecurityConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/config/WebConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/controller/AdminController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/controller/EnglishQuestionController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/controller/MathQuestionController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/controller/QuestionSetController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/controller/StudentController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/controller/UserController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/AnswerRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/EditInfo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/EnglishQuestionDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/ForgotPasswordDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/ForgotUsernameDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/LoginDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/MathQuestionDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/QuestionDetailDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/RegenerateOTPDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/RegisterDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/ResetPasswordDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/ResetUsernameDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/StudentInfo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/StudentInfoDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/VerifyAccountDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/exception/CustomException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/exception/EmailAlreadyInUseException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/exception/ErrorResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/exception/GlobalExceptionHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/exception/QuestionAlreadyExistsException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/exception/UsernameAlreadyTakenException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/Admin.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/BaseQuestion.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/EnglishQuestion.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/MathQuestion.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/MissedQuestion.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/QuestionSet.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/Role.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/Student.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/User.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/repository/AdminRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/repository/EnglishQuestionRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/repository/MathQuestionRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/repository/QuestionSetRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/repository/RoleRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/repository/StudentRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/repository/UserRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/AdminService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/EnglishQuestionService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/JwtService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/MathQuestionService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/QuestionAnsweringService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/QuestionSetService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/StudentService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/TokenBlacklistService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/UserService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/util/EmailUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/util/OtpUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/main/resources/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/satPractice/src/test/java/com/example/satPractice/SatPracticeApplicationTests.java" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/../SBRD/.idea/SBRD.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../SatPractice/src/main/java/dev/satPractice/SatPractice/security/CustomAuthenticationFailureHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/satPractice (1).iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/config/EmailConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/config/JwtAuthFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/config/SecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/config/WebConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/controller/AdminController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/controller/EnglishQuestionController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/controller/MathQuestionController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/controller/QuestionSetController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/controller/StudentController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/controller/UserController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/AnswerRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/EditInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/EnglishQuestionDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/ForgotPasswordDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/ForgotUsernameDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/LoginDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/MathQuestionDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/QuestionDetailDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/RegenerateOTPDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/RegisterDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/ResetPasswordDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/ResetUsernameDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/StudentInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/StudentInfoDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/dto/VerifyAccountDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/exception/CustomException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/exception/EmailAlreadyInUseException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/exception/ErrorResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/exception/GlobalExceptionHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/exception/QuestionAlreadyExistsException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/exception/UsernameAlreadyTakenException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/Admin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/BaseQuestion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/EnglishQuestion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/MathQuestion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/MissedQuestion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/QuestionSet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/Role.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/Student.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/model/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/repository/AdminRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/repository/EnglishQuestionRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/repository/MathQuestionRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/repository/QuestionSetRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/repository/RoleRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/repository/StudentRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/repository/UserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/AdminService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/EnglishQuestionService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/JwtService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/MathQuestionService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/QuestionAnsweringService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/QuestionSetService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/StudentService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/TokenBlacklistService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/service/UserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/util/EmailUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/satPractice/src/main/java/com/example/satPractice/util/OtpUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,7 +113,8 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Amor/Downloads/satPractice (1)"
+    "last_opened_file_path": "C:/Users/Amor/Downloads/satPractice (1)",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
 }]]></component>
   <component name="RecentsManager">
