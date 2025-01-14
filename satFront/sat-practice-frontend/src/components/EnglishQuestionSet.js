@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Typography, List, ListItem, Snackbar, Button, Card, CardContent } from '@mui/material';
+import {
+  Container,
+  Typography,
+  List,
+  ListItem,
+  Snackbar,
+  Button,
+  Card,
+  CardContent,
+} from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import LockIcon from '@mui/icons-material/Lock';
 import HomeIcon from '@mui/icons-material/Home';
@@ -53,7 +62,8 @@ const EnglishQuestionSet = () => {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
-        setQuestionSets((prev) => [...prev, ...response.data.content]);
+        const sortedSets = [...response.data.content].sort((a, b) => a.id - b.id);
+        setQuestionSets((prev) => [...prev, ...sortedSets]);
         setHasMore(!response.data.last);
       })
       .catch((error) => {
@@ -120,15 +130,11 @@ const EnglishQuestionSet = () => {
   };
 
   const isSetUnlocked = (index) => {
-    if (completedSets.has(questionSets[index].title)) {
+    if (index === 0) {
       return true;
     }
-
-    const completedArray = Array.from(completedSets);
-    const lastCompletedTitle = completedArray[completedArray.length - 2];
-
-    const lastCompletedIndex = questionSets.findIndex(set => set.title === lastCompletedTitle);
-    return index === lastCompletedIndex + 1;
+    const previousSet = questionSets[index - 1];
+    return completedSets.has(previousSet.title);
   };
 
   return (
@@ -152,10 +158,6 @@ const EnglishQuestionSet = () => {
           autoHideDuration={6000}
           onClose={handleCloseSnackbar}
           message={error}
-          sx={{
-            backgroundColor: 'error.main',
-            color: 'white',
-          }}
         />
       )}
 
@@ -178,7 +180,7 @@ const EnglishQuestionSet = () => {
                 padding: 2,
                 borderRadius: 2,
                 boxShadow: 2,
-                opacity: !isSetUnlocked(index) ? 0.5 : 1, // Reduce opacity of locked sets
+                opacity: !isSetUnlocked(index) ? 0.5 : 1,
               }}
             >
               <CardContent
@@ -193,6 +195,9 @@ const EnglishQuestionSet = () => {
                   {questionSet.title}
                   {completedSets.has(questionSet.title) && <CheckIcon sx={{ marginLeft: 1, color: 'green' }} />}
                   {!isSetUnlocked(index) && <LockIcon sx={{ marginLeft: 1, color: 'gray' }} />}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {!isSetUnlocked(index) ? 'Complete the previous question set to unlock this one.' : 'Click to start'}
                 </Typography>
               </CardContent>
             </Card>

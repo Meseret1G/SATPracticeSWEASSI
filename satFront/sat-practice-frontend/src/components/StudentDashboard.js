@@ -122,6 +122,11 @@ const StudentDashboard = () => {
         setMessageDrawerOpen(true);
         return;
     }
+    if (formData.targetScore <= 0) {
+      setMessage("Target score must be greater than 0 to save changes.");
+      setMessageDrawerOpen(true);
+      return;
+    }
       try {
         const response = await axios.put('http://localhost:8080/student/edit', formData, {
           headers: {
@@ -132,6 +137,7 @@ const StudentDashboard = () => {
         if (response.data) {
           setUser (response.data);
           setIsEditing(false);
+          
           setMessage("Your information has been successfully saved!");
           setMessageDrawerOpen(true);
         } else {
@@ -546,10 +552,10 @@ const StudentDashboard = () => {
                     setFormData({ ...formData, targetScore: value });
                   }
                 }}
-                error={formData.targetScore < 0 || formData.targetScore > 1600}
+                error={formData.targetScore <= 0 || formData.targetScore > 1600}
                 helperText={
-                  formData.targetScore < 0 || formData.targetScore > 1600
-                    ? "Target score must be between 0 and 1600."
+                  formData.targetScore <= 0 || formData.targetScore > 1600
+                    ? "Target score must be between 1 and 1600."
                     : ""
                 }
                 fullWidth

@@ -30,8 +30,8 @@ const StudentInfoForm = () => {
 
         // Ensure target score is a number between 0 and 1600
         const score = parseInt(targetScore, 10);
-        if (isNaN(score) || score < 0 || score > 1600) {
-            setDialogMessage("Target score must be a number between 0 and 1600.");
+        if (isNaN(score) || score <= 0 || score > 1600) {
+            setDialogMessage("Target score must be a number between 1 and 1600.");
             setIsError(true);
             setDialogOpen(true);
             return false;
@@ -120,7 +120,7 @@ const StudentInfoForm = () => {
                     onChange={(e) => setTargetScore(e.target.value)}
                     required
                     margin="normal"
-                    inputProps={{ min: 0, max: 1600 }}
+                    inputProps={{ min: 1, max: 1600 }}
                 />
                 <Button
                     type="submit"

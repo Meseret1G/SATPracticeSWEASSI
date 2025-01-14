@@ -73,7 +73,6 @@ const EnglishQuestionForm = () => {
       setIsFormModified(false);  // Reset modified state
     } catch (error) {
       if (error.response) {
-        // Check if the error response contains a message from the backend
         const errorMessage = error.response.data?.error || "Failed to add English questions.";
         showSnackbar(errorMessage); // Show the error message from the backend
       } else if (error.response && error.response.status === 401) {

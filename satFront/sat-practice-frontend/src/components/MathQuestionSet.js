@@ -53,7 +53,7 @@ const MathQuestionSet = () => {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
-        const sortedSets = [...response.data.content].sort((a, b) => a.id - b.id); // Sort by id
+        const sortedSets = [...response.data.content].sort((a, b) => a.id - b.id);
         setQuestionSets((prev) => [...prev, ...sortedSets]);
         setHasMore(!response.data.last);
       })
@@ -65,7 +65,6 @@ const MathQuestionSet = () => {
         setLoading(false);
       });
   };
-  
 
   const loadCompletedSets = () => {
     const token = sessionStorage.getItem('token');
@@ -114,6 +113,9 @@ const MathQuestionSet = () => {
   const handleTitleClick = (title, index) => {
     if (isSetUnlocked(index)) {
       navigate(`/questionSet/${encodeURIComponent(title)}`);
+    } else {
+      setError('Complete the previous question set to unlock this one.');
+      setSnackbarOpen(true);
     }
   };
 
@@ -122,15 +124,11 @@ const MathQuestionSet = () => {
   };
 
   const isSetUnlocked = (index) => {
-    if (completedSets.has(questionSets[index].title)) {
+    if (index === 0) {
       return true;
     }
-
-    const completedArray = Array.from(completedSets);
-    const lastCompletedTitle = completedArray[completedArray.length - 1];
-
-    const lastCompletedIndex = questionSets.findIndex(set => set.title === lastCompletedTitle);
-    return index === lastCompletedIndex + 1;
+    const previousSet = questionSets[index - 1];
+    return completedSets.has(previousSet.title);
   };
 
   return (
@@ -154,10 +152,6 @@ const MathQuestionSet = () => {
           autoHideDuration={6000}
           onClose={handleCloseSnackbar}
           message={error}
-          sx={{
-            backgroundColor: 'error.main',
-            color: 'white',
-          }}
         />
       )}
 
@@ -195,6 +189,9 @@ const MathQuestionSet = () => {
                   {questionSet.title}
                   {completedSets.has(questionSet.title) && <CheckIcon sx={{ marginLeft: 1, color: 'green' }} />}
                   {!isSetUnlocked(index) && <LockIcon sx={{ marginLeft: 1, color: 'gray' }} />}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {!isSetUnlocked(index) ? 'Complete the previous question set to unlock this one.' : 'Click to start'}
                 </Typography>
               </CardContent>
             </Card>

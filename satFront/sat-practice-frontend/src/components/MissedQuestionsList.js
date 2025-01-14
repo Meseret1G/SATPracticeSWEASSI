@@ -153,7 +153,7 @@ const MissedQuestionsList = () => {
         setSnackbarOpen(true);
         setTimeout(() => {
           window.location.reload();
-        }, 2000);
+        }, 5000);
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {

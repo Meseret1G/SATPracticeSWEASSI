@@ -95,7 +95,7 @@ const QuestionAnswering = () => {
   };
 
   const handleSubmit = async (e, isQuizCompleted = false) => {
-    if (e) e.preventDefault(); 
+    if (e) e.preventDefault();
   
     setError('');
     setShowExplanation(false);
@@ -103,12 +103,15 @@ const QuestionAnswering = () => {
     try {
       const token = sessionStorage.getItem('token');
       if (!token) {
-        setError('User  is not authenticated. Please log in.');
+        setError('User is not authenticated. Please log in.');
         setSnackbarOpen(true);
         return;
       }
   
-      const currentQuestion = [...questions.mathQuestion, ...questions.englishQuestions][currentQuestionIndex];
+      const currentQuestion = [
+        ...questions.mathQuestion,
+        ...questions.englishQuestions,
+      ][currentQuestionIndex];
   
       const requestBody = {
         studentId,
@@ -125,30 +128,37 @@ const QuestionAnswering = () => {
         },
       });
   
-      const isCorrect = result.data.correct; 
-      setResponses((prev) => [...prev, { isCorrect, explanation: result.data.explanation }]);
-  
-      // Update score and missed questions
+      const isCorrect = result.data.correct;
+       
       if (isCorrect) {
-        setScore((prevScore) => prevScore + 1);
-      } else {
-        // Check if the question is already missed
-        const alreadyMissed = responses.some(response => response.isCorrect === false && response.explanation === result.data.explanation);
-        if (!alreadyMissed) {
-          setMissedAnswersCount((prevCount) => prevCount + 1);
-        }
-      }
+        console.log(`Correct Answer for Question ${currentQuestionIndex + 1}`);
+        setScore((prevScore) => {
+            console.log(`Previous Score: ${prevScore}`);
+            return prevScore + 1;
+        });
+    } else {
+        console.log(`Wrong Answer for Question ${currentQuestionIndex + 1}`);
+    }
+    
+  
+      setResponses((prev) => [
+        ...prev,
+        {
+          isCorrect,
+          explanation: result.data.explanation,
+        },
+      ]);
   
       setShowExplanation(true);
   
       if (isQuizCompleted) {
-        setQuizCompleted(true);  
+        setQuizCompleted(true);
       }
     } catch (err) {
       if (err.response && err.response.status === 401) {
         alert('Session expired. Please log in again.');
         setTimeout(() => {
-          navigate('/login'); 
+          navigate('/login');
         }, 3000);
       } else {
         setError('Error submitting answers. Please try again.');
@@ -156,6 +166,7 @@ const QuestionAnswering = () => {
       }
     }
   };
+  
 
   const handleNext = () => {
     setSelectedAnswer('');
@@ -236,16 +247,26 @@ const QuestionAnswering = () => {
     padding: '10px',
     borderRadius: '8px',
     marginTop: '10px',
-    backgroundColor: responses[currentQuestionIndex]?.isCorrect ? '#d4edda' : '#f8d7da',
-    color: responses[currentQuestionIndex]?.isCorrect ? '#155724' : '#721c24',
-    border: `1px solid ${responses[currentQuestionIndex]?.isCorrect ? '#c3e6cb' : '#f5c6cb'}`,
+    backgroundColor: responses[currentQuestionIndex]?.isCorrect
+      ? '#d4edda'
+      : '#f8d7da',
+    color: responses[currentQuestionIndex]?.isCorrect
+      ? '#155724'
+      : '#721c24',
+    border: `1px solid ${
+      responses[currentQuestionIndex]?.isCorrect
+        ? '#c3e6cb'
+        : '#f5c6cb'
+    }`,
   };
+  
 
   useEffect(() => {
     if (quizCompleted) {
       markQuestionSetCompleted();
     }
   }, [quizCompleted]);
+  
 
   return (
     <Container
@@ -318,10 +339,18 @@ const QuestionAnswering = () => {
             </Box>
           )}
           {!showExplanation && (
-            <Button type="submit" variant="contained" color="primary" disabled={!selectedAnswer} fullWidth>
-              Submit Answer
-            </Button>
-          )}
+    <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        disabled={!selectedAnswer || responses[currentQuestionIndex]} 
+        fullWidth
+    >
+        Submit Answer
+    </Button>
+)}
+
+        
         </form>
       ) : (
         <CircularProgress />
